@@ -1,0 +1,13 @@
+# grotte
+
+Edit-in-place crud schemas and data.  "Rails without rebooting."
+
+## Usage
+
+FIXME: write
+
+## License
+
+Copyright (C) 2011 Josh Daghlian
+
+Distributed under the Eclipse Public License, the same as Clojure.
