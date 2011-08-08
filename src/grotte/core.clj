@@ -43,7 +43,8 @@
   [^Keyword domain & keys-and-vals]
   (dosync
    (let [rows-for-domain (get @*rows* domain)
-         row (ref (merge {:domain domain} (into {} (map vec (partition 2 keys-and-vals)))))]
+         row (ref (merge {:domain domain :id (UUID/randomUUID)}
+                         (into {} (map vec (partition 2 keys-and-vals)))))]
      (alter rows-for-domain conj row)
      row)))
 
