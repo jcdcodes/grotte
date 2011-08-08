@@ -16,7 +16,6 @@
      (if (nil? old-columns-ref)
        (do (alter *columns* assoc domain (ref []))
            (alter *rows*    assoc domain (ref [])))))))
-
 (defn drop-domain
   [^Keyword domain]
   (dosync (alter *domains* assoc domain :hidden)))
@@ -37,7 +36,25 @@
 ;;
 ;;;;;;;;;;;;;;
 
+;;;;;;;;;;;;;;
+;; Row operations
+;;
+(defn add-row
+  [^Keyword domain & keys-and-vals]
+  (dosync
+   (let [rows-for-domain (get @*rows* domain)
+         row (ref (merge {:domain domain} (into {} (map vec (partition 2 keys-and-vals)))))]
+     (alter rows-for-domain conj row)
+     row)))
 
-;(defn add-row)
-;(defn update-row)
-;(defn delete-row)
+;;(defn update-row)
+(defn update-row
+  [row ^Keyword column value]
+  (dosync (alter row assoc column value)))
+
+;;(defn delete-row)
+(defn delete-row
+  [row]
+  (dosync (alter row assoc :deleted true)))
+;;
+;;;;;;;;;;;;;;
