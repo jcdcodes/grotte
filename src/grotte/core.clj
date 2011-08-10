@@ -33,6 +33,12 @@
 (defn drop-column
   [^Keyword domain ^Keyword column]
   (dosync (alter (get @*columns* domain) (partial remove #(= column %)))))
+
+(defn has-column
+  [^Keyword domain ^Keyword column]
+  (let [columns-ref (domain @*columns*)]
+    (if (not (nil? columns-ref))
+      (some #(= % column) @columns-ref))))
 ;;
 ;;;;;;;;;;;;;;
 
