@@ -4,14 +4,21 @@
 
 (defn seed-data-fixture
   [testfn]
+
   (gc/create-domain :post)
   (gc/add-column :post :timestamp)
   (gc/add-column :post :body)
+
   (gc/create-domain :comment)
   (gc/add-column :comment :post)
   (gc/add-column :comment :author)
   (gc/add-column :comment :body)
   (gc/add-column :comment :timestamp)
+
+  (gc/add-row :post :timestamp (java.util.Date.) :body "First p0st.")
+  (gc/add-row :post :timestamp (java.util.Date.) :body "Social mobile viral.")
+  (gc/add-row :post :timestamp (java.util.Date.) :body "Navel gazing.")
+
   (testfn)
   )
 
@@ -30,4 +37,12 @@
   (is (not (gc/has-column :timestamp :post)))
   (is (not (gc/has-column :post :comment))))
 
+(deftest test-row-ops
+  (is (= 2 (count @gc/*rows*)) "Should have Two domains, so two refs in *rows*.")
+  (is (= 3 (count @(:post @gc/*rows*))))
+  (is (nil? (:monkey (first @(:post @gc/*rows*)))))
+  (is (= "First p0st." (:body @(first @(:post @gc/*rows*)))))
+  )
 
+
+  
