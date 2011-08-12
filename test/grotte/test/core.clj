@@ -40,9 +40,7 @@
 (deftest test-row-ops
   (is (= 2 (count @gc/*rows*)) "Should have Two domains, so two refs in *rows*.")
   (is (= 3 (count @(:post @gc/*rows*))))
-  (is (nil? (:monkey (first @(:post @gc/*rows*)))))
+  (is (nil? (:monkey @(first @(:post @gc/*rows*)))))
   (is (= "First p0st." (:body @(first @(:post @gc/*rows*)))))
   )
 
-
-  
