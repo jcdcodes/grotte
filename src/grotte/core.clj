@@ -1,9 +1,16 @@
 (ns grotte.core
   (:import java.util.UUID))
 
-(defonce *domains* (ref {}))
-(defonce *columns* (ref {}))
-(defonce *rows*    (ref {}))
+(def *domains* (ref {}))
+(def *columns* (ref {}))
+(def *rows*    (ref {}))
+
+(defn truncate-all []
+  (dosync
+   (ref-set *domains* {})
+   (ref-set *columns* {})
+   (ref-set *rows*    {})
+   ))
 
 ;;;;;;;;;;;;;;
 ;; Create and destroy (hide) domains (classes)
@@ -21,7 +28,6 @@
   (dosync (alter *domains* assoc domain :hidden)))
 ;;
 ;;;;;;;;;;;;;;
-
 
 ;;;;;;;;;;;;;;
 ;; Add and remove columns
@@ -45,7 +51,7 @@
 ;;;;;;;;;;;;;;
 ;; Row operations
 ;;
-(defn add-row
+(defn make-row
   [^Keyword domain & keys-and-vals]
   (dosync
    (let [rows-for-domain (get @*rows* domain)
@@ -54,14 +60,24 @@
      (alter rows-for-domain conj row)
      row)))
 
-;;(defn update-row)
 (defn update-row
-  [row ^Keyword column value]
-  (dosync (alter row assoc column value)))
+  [domain id ^Keyword column value]
+  (let [row (first (filter #(= id (str (:id @%))) @(get @*rows* domain)))]
+    (dosync (alter row assoc column value))))
 
-;;(defn delete-row)
+(defn- set-row-deleted
+  [domain id deleted]
+  (let [row (first (filter #(= id (:id @%)) @(get @*rows* domain)))]
+    (dosync (alter row assoc :deleted deleted))
+    @row))
+
 (defn delete-row
-  [row]
-  (dosync (alter row assoc :deleted true)))
+  [domain id]
+  (set-row-deleted domain id true))
+
+(defn undelete-row
+  [domain id]
+  (set-row-deleted domain id false))
+
 ;;
 ;;;;;;;;;;;;;;

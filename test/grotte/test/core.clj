@@ -15,11 +15,14 @@
   (gc/add-column :comment :body)
   (gc/add-column :comment :timestamp)
 
-  (gc/add-row :post :timestamp (java.util.Date.) :body "First p0st.")
-  (gc/add-row :post :timestamp (java.util.Date.) :body "Social mobile viral.")
-  (gc/add-row :post :timestamp (java.util.Date.) :body "Navel gazing.")
+  (gc/make-row :post :timestamp (java.util.Date.) :body "First p0st.")
+  (gc/make-row :post :timestamp (java.util.Date.) :body "Social mobile viral.")
+  (gc/make-row :post :timestamp (java.util.Date.) :body "Navel gazing.")
 
+  (gc/delete-row :post (:id @(second @(:post @gc/*rows*))))
+  
   (testfn)
+  (gc/truncate-all)
   )
 
 (use-fixtures :once seed-data-fixture)
@@ -40,7 +43,7 @@
 (deftest test-row-ops
   (is (= 2 (count @gc/*rows*)) "Should have Two domains, so two refs in *rows*.")
   (is (= 3 (count @(:post @gc/*rows*))))
-  (is (nil? (:monkey @(first @(:post @gc/*rows*)))))
   (is (= "First p0st." (:body @(first @(:post @gc/*rows*)))))
+  (is (= 2 (count (filter #(not (:deleted @%)) @(:post @gc/*rows*)))))
+  (is (= 1 (count (filter #(:deleted @%) @(:post @gc/*rows*)))))
   )
-
