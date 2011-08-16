@@ -19,7 +19,7 @@
   (gc/make-row :post :timestamp (java.util.Date.) :body "Social mobile viral.")
   (gc/make-row :post :timestamp (java.util.Date.) :body "Navel gazing.")
 
-  (gc/delete-row :post (:id @(second @(:post @gc/*rows*))))
+  (gc/delete-row :post (:id @(gc/find-row :post :body "Social mobile viral.")))
   
   (testfn)
   (gc/truncate-all)
@@ -42,8 +42,11 @@
 
 (deftest test-row-ops
   (is (= 2 (count @gc/*rows*)) "Should have Two domains, so two refs in *rows*.")
-  (is (= 3 (count @(:post @gc/*rows*))))
-  (is (= "First p0st." (:body @(first @(:post @gc/*rows*)))))
-  (is (= 2 (count (filter #(not (:deleted @%)) @(:post @gc/*rows*)))))
-  (is (= 1 (count (filter #(:deleted @%) @(:post @gc/*rows*)))))
+  (is (= 3 (count (gc/find-rows :post))))
+  (is (= "First p0st." (:body @(first (gc/find-rows :post)))))
+  (is (= "Navel gazing." (:body @(gc/find-row :post :body "Navel gazing."))))
+  (is (= 2 (count (filter #(not (:deleted @%)) (gc/find-rows :post)))))
+  (is (= 1 (count (filter #(:deleted @%) (gc/find-rows :post)))))
   )
+
+

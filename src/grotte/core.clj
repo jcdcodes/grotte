@@ -60,14 +60,26 @@
      (alter rows-for-domain conj row)
      row)))
 
+(defn find-rows
+  ([domain]
+     @(get @*rows* domain))
+  ([domain ^Keyword column value]
+     (filter #(= value (get @% column)) (find-rows domain)))
+  ([domain ^Keyword column value & more-columns-and-values]
+     (filter (apply find-rows (into [domain] more-columns-and-values)))))
+
+(defn find-row
+  [domain ^Keyword column value]
+  (first (filter #(= value (get @% column)) (find-rows domain))))
+
 (defn update-row
   [domain id ^Keyword column value]
-  (let [row (first (filter #(= id (str (:id @%))) @(get @*rows* domain)))]
+  (let [row (find-row domain :id id)]
     (dosync (alter row assoc column value))))
 
 (defn- set-row-deleted
   [domain id deleted]
-  (let [row (first (filter #(= id (:id @%)) @(get @*rows* domain)))]
+  (let [row (find-row domain :id id)]
     (dosync (alter row assoc :deleted deleted))
     @row))
 
