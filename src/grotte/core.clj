@@ -54,14 +54,17 @@
 ;; Row operations
 ;;
 (defn make-row
+  """Creates a new row.  domain must already have been defined.
+     n.b.: If called within grotte.prevail/prevail be sure to
+     specify :id explicitly so the row will have the same :id value
+     upon rehydration from disk.
+"""
   [^Keyword domain & keys-and-vals]
   (dosync
    (let [rows-for-domain (get @*rows* domain)
          id (UUID/randomUUID)
          row (ref (into {:domain domain :id id} (map vec (partition 2 keys-and-vals))))]
      (alter rows-for-domain conj row)
-     ;;(prevail/persist-string
-     ;; (str "(make-row " (pr-str domain) " :id \"" id "\" " (apply pr-str keys-and-vals) ")"))
      row)))
 
 (defn find-rows
@@ -79,16 +82,12 @@
 (defn update-row
   [domain id ^Keyword column value]
   (let [row (find-row domain :id id)]
-    (dosync (alter row assoc column value)
-            (prevail/persist-string (str "(update-row " (apply pr-str [domain  id column value]) ")"))
-            )))
+    (dosync (alter row assoc column value))))
 
 (defn- set-row-deleted
   [domain id deleted]
   (let [row (find-row domain :id id)]
-    (dosync (alter row assoc :deleted deleted)
-            (prevail/persist-string (str "(set-row-deleted " domain " " id " " deleted ")"))
-            )
+    (dosync (alter row assoc :deleted deleted))
     @row))
 
 (defn delete-row
