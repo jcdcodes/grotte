@@ -1,5 +1,7 @@
 (ns grotte.core
-  (:import java.util.UUID))
+  (:import java.util.UUID)
+  (:require [clojure.string :as string]
+            [grotte.prevail :as prevail]))
 
 (def *domains* (ref {}))
 (def *columns* (ref {}))
@@ -55,9 +57,11 @@
   [^Keyword domain & keys-and-vals]
   (dosync
    (let [rows-for-domain (get @*rows* domain)
-         row (ref (merge {:domain domain :id (UUID/randomUUID)}
-                         (into {} (map vec (partition 2 keys-and-vals)))))]
+         id (UUID/randomUUID)
+         row (ref (into {:domain domain :id id} (map vec (partition 2 keys-and-vals))))]
      (alter rows-for-domain conj row)
+     ;;(prevail/persist-string
+     ;; (str "(make-row " (pr-str domain) " :id \"" id "\" " (apply pr-str keys-and-vals) ")"))
      row)))
 
 (defn find-rows
@@ -75,12 +79,16 @@
 (defn update-row
   [domain id ^Keyword column value]
   (let [row (find-row domain :id id)]
-    (dosync (alter row assoc column value))))
+    (dosync (alter row assoc column value)
+            (prevail/persist-string (str "(update-row " (apply pr-str [domain  id column value]) ")"))
+            )))
 
 (defn- set-row-deleted
   [domain id deleted]
   (let [row (find-row domain :id id)]
-    (dosync (alter row assoc :deleted deleted))
+    (dosync (alter row assoc :deleted deleted)
+            (prevail/persist-string (str "(set-row-deleted " domain " " id " " deleted ")"))
+            )
     @row))
 
 (defn delete-row
