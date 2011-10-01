@@ -13,7 +13,6 @@
         ]
     (dosync (ref-set *journal-out* journal-out))))
 
-
 (def *transaction-counter* (atom 0M))
 
 (defn persist-string
@@ -21,14 +20,17 @@
   (let [out @*journal-out*]
     (.print out (str s \newline))
     (.flush out)))
+;; Consider adding a write buffer so we're not constantly waiting for the disk.
+;; This would mean dropping events on the floor when we crash.
 
 (defn agent-persist-string
   [a s]
+  ;;(Thread/sleep 10) ;; use this to make the queue back up so we can watch it drain.
   (persist-string s)
   a)
 
 (def *logger-agent* (agent {}))
-
+;; Recall that (.getQueueCount *logger-agent*) shows you the event queue's size.
 
 (defn serialized-transaction
   [transaction-id & transaction-params]
