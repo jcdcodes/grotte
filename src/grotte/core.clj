@@ -54,11 +54,7 @@
 ;; Row operations
 ;;
 (defn make-row
-  """Creates a new row.  domain must already have been defined.
-     n.b.: If called within grotte.prevail/prevail be sure to
-     specify :id explicitly so the row will have the same :id value
-     upon rehydration from disk.
-"""
+  "Creates a new row.  domain must already have been defined. n.b.: If called within grotte.prevail/prevail be sure to specify :id explicitly so the row will have the same :id value upon rehydration from disk."
   [^Keyword domain & keys-and-vals]
   (dosync
    (let [rows-for-domain (get @*rows* domain)
