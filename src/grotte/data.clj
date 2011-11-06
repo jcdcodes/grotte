@@ -74,13 +74,20 @@
      (filter (apply find-rows (into [domain] more-columns-and-values)))))
 
 (defn find-row
-  ([domain ^Keyword column value]
-     (first (filter #(= value (get @% column)) (find-rows domain)))))
+  [domain ^Keyword column value]
+  (first (filter #(= value (get @% column)) (find-rows domain))))
+(defn find-row-by-stringid
+  [domain ^String id]
+  (find-row domain :id (UUID/fromString id)))
+
 
 (defn update-row
   [domain id ^Keyword column value]
   (let [row (find-row domain :id id)]
     (dosync (alter row assoc column value))))
+(defn update-row-by-idstring
+  [domain ^String id ^Keyword column value]
+  (update-row domain (UUID/fromString id) column value))
 
 (defn- set-row-deleted
   [domain id deleted]

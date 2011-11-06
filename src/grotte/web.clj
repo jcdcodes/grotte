@@ -3,10 +3,9 @@
 	ring.util.response
 	hiccup.core)
   (:require [compojure.route :as route]
+            [compojure.handler :as handler]
 	    [ring.adapter.jetty :as jetty]
 	    [grotte.data :as data]))
-
-(def *server* (ref nil))
 
 (defn do-page
   []
@@ -60,8 +59,8 @@
        [:span    {:id (str "EDIT-" (:id @row) "_" (subs (str column) 1))} (get @row column)]
        [:script {:type "text/javascript"}
         (str "$(\"#EDIT-" (:id @row) "_" (subs (str column) 1) "\").editable('/"
-             (subs (str domain) 1) "/edit/" (:id @row) "',"
-             "{tooltip: \"Click to edit...\", style : \"inherit\"});")]]
+             (subs (str domain) 1) "/edit/EDIT-" (:id @row) "_" (subs (str column) 1) "',"
+             "{tooltip: \"Click to edit...\", style : \"inherit\", loadtype:'POST', id:'" (:id row) "',domain:'" (subs (str domain) 1) "'});")]]
 
       ;; Dates.  Picked by typing MM/DD/YYYY or with JQuery UI calendar widget.  Stored as MM/DD/YYYY strings.
       ;; Requires javascript glue elsewhere (domain-table).
@@ -70,7 +69,7 @@
        [:span {:class "dt" :id (str "DATE-" (:id @row) "_" (subs (str column) 1))} (get @row column)]
        [:script {:type "text/javascript"}
         (str "$(\"#DATE-" (:id @row) "_" (subs (str column) 1) "\").editable('/"
-             (subs (str domain) 1) "/edit/" (:id @row) "',"
+             (subs (str domain) 1) "/edit/DATE-" (:id @row) "_" (subs (str column) 1) "',"
              "{tooltip: \"Click to edit...\", style : \"inherit\", type: \"datepicker\"});")]]
 
       ;; Foreign key relation to the :item domain.  Assumes :item as defined in kv.core.
@@ -177,7 +176,7 @@
 (def jquery-jeditable-datepicker (slurp "/users/jcd/noodlings/kv/src/js/jquery.jeditable.datepicker.js"))
 (def conjure-js (slurp "/users/jcd/noodlings/kv/src/js/conjure.js"))
 
-(defroutes the-scaffold
+(defroutes the-routes
   (GET "/" []
        (do-page))
 
@@ -202,17 +201,22 @@
   (GET "/:domain/create" [domain]
        (data/make-row (keyword domain))
        (redirect (str "/" domain)))
-  (POST "/:domain/create" [domain title body author]
-	(data/make-row (keyword domain) :title title :body body :author author)
-	(redirect "/item"))
 
-  (POST "/:domain/edit/*" [domain id value]
-	(let [column-name (subs id 42)
-	      real-id (subs id 5 41)]  ;; 5 is just (count "EDIT-")
-	  (data/update-row (keyword domain) real-id (keyword column-name) value))
-	value)
+  (POST "/:domain/edit/:id" {params :params} []
+        (do
+          (prn params)
+          (let [column-name (subs (params :id) 42)
+                value (params :value)
+                domain (params :domain)
+                real-id (subs (params :id) 5 41)]  ;; 5 is just (count "EDIT-")
+            (data/update-row-by-idstring (keyword domain) real-id (keyword column-name) value)
+            value)))
+
   (route/not-found "404: Fail whale"))
 
-(dosync
- (ref-set *server*
-	  (jetty/run-jetty (var the-scaffold) {:port 4000 :join? false})))
+
+(def app (handler/api (var the-routes)))
+
+(defonce *server*
+  (jetty/run-jetty app {:port 4000 :join? false}))
+

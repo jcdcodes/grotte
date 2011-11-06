@@ -4,3 +4,5 @@
             [grotte.data :as data]
             [grotte.prevail :as prevail]))
 
+(grotte.data/create-domain :post)
+(grotte.data/add-column :post :body :editable-text)
