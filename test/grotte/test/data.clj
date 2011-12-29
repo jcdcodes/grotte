@@ -1,4 +1,4 @@
-(ns grotte.test.core
+(ns grotte.test.data
   (:use [grotte.core :as gc]
         [grotte.data :as data])
   (:use [clojure.test]))
