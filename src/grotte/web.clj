@@ -163,7 +163,7 @@
 	   (let [x
 		 (loop [row (if (ref? current-row) @current-row current-row) i 0 acc [:ul]]
 		   (if (nil? row) acc
-		       (recur (:prev row) (dec i)
+		       (recur (:parent row) (dec i)
 			      (conj acc
 				    [:li i]
 				    [:ul
@@ -196,8 +196,8 @@
   (GET "/:domain/delete/:id" [domain id]
        (data/delete-row-by-idstring (keyword domain) id))
   (GET "/:domain/drop-column/:column-name" [domain column-name]
-       (data/drop-column (keyword domain) (keyword column-name))
-       (redirect (str "/" domain)))
+    (data/drop-column (keyword domain) (keyword column-name))
+    (redirect (str "/" domain)))
   (GET "/:domain/create" [domain]
        (data/make-row (keyword domain))
        (redirect (str "/" domain)))
@@ -217,6 +217,11 @@
 
 (def app (handler/api (var the-routes)))
 
-(defonce *server*
-  (jetty/run-jetty app {:port 4000 :join? false}))
+(defonce server (ref nil))
+(defn start-server
+  []
+  (ref-set server (jetty/run-jetty app {:port 4000 :join? false})))
+(defn stop-server
+  []
+  (.stop @server))
 

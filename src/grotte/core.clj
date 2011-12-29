@@ -1,8 +1,10 @@
 (ns grotte.core
   (:import java.util.UUID)
-  (:require [grotte.web :as web]
-            [grotte.data :as data]
-            [grotte.prevail :as prevail]))
+  (:require
+   [grotte.prevail :as prevail]
+   [grotte.data :as data]
+   [grotte.web :as web]
+   ))
 
-(grotte.data/create-domain :post)
-(grotte.data/add-column :post :body :editable-text)
+(data/create-domain :post)
+(data/add-column :post :body :editable-text)

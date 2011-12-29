@@ -83,8 +83,9 @@
 
 (defn update-row
   [domain id ^Keyword column value]
-  (let [row (find-row domain :id id)]
-    (dosync (alter row assoc column value))))
+  (let [row (find-row domain :id id)
+        prev-row @row]
+    (dosync (alter row assoc column value :parent prev-row))))
 (defn update-row-by-idstring
   [domain ^String id ^Keyword column value]
   (update-row domain (UUID/fromString id) column value))
