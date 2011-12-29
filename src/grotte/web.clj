@@ -71,7 +71,7 @@
              (subs (str domain) 1) "/edit/DATE-" (:id @row) "_" (subs (str column) 1) "',"
              "{tooltip: \"Click to edit...\", style : \"inherit\", type: \"datepicker\"});")]]
 
-      ;; Foreign key relation to the :item domain.  Assumes :item as defined in kv.core.
+      ;; Foreign key relation to the :item domain.  Assumes :item as defined in grotte.core.
       :item (if (nil? (get @row column))
               [:i "nil"]
               [:a {:href (str "/item/show/" (:id @(get @row column)))} (str "Item #" (:id @(get @row column)))])
@@ -171,9 +171,9 @@
 	     x))
 	 [:hr]]))
 
-(def jquery-jeditable (slurp "/users/jcd/noodlings/kv/src/js/jquery.jeditable.js"))
-(def jquery-jeditable-datepicker (slurp "/users/jcd/noodlings/kv/src/js/jquery.jeditable.datepicker.js"))
-(def conjure-js (slurp "/users/jcd/noodlings/kv/src/js/conjure.js"))
+(def jquery-jeditable (slurp "src/js/jquery.jeditable.js"))
+(def jquery-jeditable-datepicker (slurp "src/js/jquery.jeditable.datepicker.js"))
+(def conjure-js (slurp "src/js/conjure.js"))
 
 (defroutes the-routes
   (GET "/" []
