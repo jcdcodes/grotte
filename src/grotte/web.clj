@@ -25,15 +25,14 @@
                "#li { margin-top: 0.2em; margin-bottom: 0.4em; }")]]
         
 	[:body
-	 [:h1 "kv: rails without restarting"]
-	 [:p "Sketch out a schema with sample data right in the browser."]
+	 [:h1 "grotte: rails without restarting"]
+	 [:p "Sketch out a schema with sample data (someday) right in the browser."]
          
 	 [:p "Upload some data to see how your schema feels. Create "
           "tables, add and drop columns, define foreign keys, add and "
           "delete rows, edit values in place, and browse your data.  All "
           "instantly, right in the browser.  Convert your app (and its "
-          "data) to Rails, Django, or Grails, or just use "
-          [:tt "kvhost "] "to host your app."]
+          "data) to Rails, Django, or Grails; or just host your app here, someday."]
          
          ;; List of defined entity types.
          [:h3 "Domains"]
