@@ -5,4 +5,5 @@
                  [org.clojure/clojure-contrib "1.2.0"]
                  [ring "1.0.0-RC1"]
                  [compojure "0.6.4"]
-                 [hiccup "0.3.7"]])
+                 [hiccup "0.3.7"]]
+  :main grotte.core)

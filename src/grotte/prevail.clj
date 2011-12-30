@@ -9,7 +9,7 @@
     (with-open [rdr (BufferedReader. (FileReader. filename))]
       (doseq [line (line-seq rdr)]
         (try (eval (read-string line))
-          (catch Exception e (println "Failed to read: " line)))))))
+          (catch Exception e (println "Failed to read: " line " (" e ")")))))))
 
 (def *journal-out* (ref '()))
 (defn init-db

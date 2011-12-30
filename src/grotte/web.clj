@@ -199,7 +199,7 @@
        (prevail/prevail grotte.data/drop-column (keyword domain) (keyword column-name))
        (redirect (str "/" domain)))
   (GET "/:domain/create" [domain]
-       (prevail/prevail grotte.data/make-row (keyword domain))
+       (prevail/prevail grotte.data/make-row (keyword domain) :id (java.util.UUID/randomUUID))
        (redirect (str "/" domain)))
 
   (POST "/:domain/edit/:id" {params :params} []
