@@ -5,7 +5,8 @@
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
 	    [ring.adapter.jetty :as jetty]
-	    [grotte.data :as data]))
+	    [grotte.data :as data]
+            [grotte.prevail :as prevail]))
 
 (defn do-page
   []
@@ -193,12 +194,12 @@
   (GET "/:domain/show/:id" [domain id]
        (row-page (keyword domain) id))
   (GET "/:domain/delete/:id" [domain id]
-       (data/delete-row-by-idstring (keyword domain) id))
+       (prevail/prevail grotte.data/delete-row-by-idstring (keyword domain) id))
   (GET "/:domain/drop-column/:column-name" [domain column-name]
-    (data/drop-column (keyword domain) (keyword column-name))
-    (redirect (str "/" domain)))
+       (prevail/prevail grotte.data/drop-column (keyword domain) (keyword column-name))
+       (redirect (str "/" domain)))
   (GET "/:domain/create" [domain]
-       (data/make-row (keyword domain))
+       (prevail/prevail grotte.data/make-row (keyword domain))
        (redirect (str "/" domain)))
 
   (POST "/:domain/edit/:id" {params :params} []
@@ -208,7 +209,7 @@
                 value (params :value)
                 domain (params :domain)
                 real-id (subs (params :id) 5 41)]  ;; 5 is just (count "EDIT-")
-            (data/update-row-by-idstring (keyword domain) real-id (keyword column-name) value)
+            (prevail/prevail grotte.data/update-row-by-idstring (keyword domain) real-id (keyword column-name) value)
             value)))
 
   (route/not-found "404: Fail whale"))
@@ -219,8 +220,9 @@
 (defonce server (ref nil))
 (defn start-server
   []
-  (ref-set server (jetty/run-jetty app {:port 4000 :join? false})))
+  (dosync (ref-set server (jetty/run-jetty app {:port 4000 :join? false}))))
 (defn stop-server
   []
   (.stop @server))
+
 

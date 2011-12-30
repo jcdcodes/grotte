@@ -8,3 +8,7 @@
 
 (data/create-domain :post)
 (data/add-column :post :body :editable-text)
+(data/add-column :post :pubdate :date)
+(web/start-server)
+(prevail/init-db "1" 1)
+(prevail/load-db "base")

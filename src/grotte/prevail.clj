@@ -1,13 +1,21 @@
 (ns grotte.prevail
-  (:import (java.io FileOutputStream File PrintWriter OutputStreamWriter
-                    BufferedReader InputStreamReader FileInputStream))
+  (:import (java.io FileOutputStream File PrintWriter OutputStreamWriter FileReader PushbackReader
+                    BufferedReader InputStreamReader FileInputStream FileNotFoundException))
   (:require [clojure.string :as string]))
+
+(defn load-db
+  [journal-file-name]
+  (let [filename (str "schmatabase/" journal-file-name ".journal.clj")]
+    (with-open [rdr (BufferedReader. (FileReader. filename))]
+      (doseq [line (line-seq rdr)]
+        (try (eval (read-string line))
+          (catch Exception e (println "Failed to read: " line)))))))
 
 (def *journal-out* (ref '()))
 (defn init-db
   [journal-file-name first-transaction-id]
   (let [creation-time (System/currentTimeMillis)
-        filename (str "schmatabase/" first-transaction-id ".journal")
+        filename (str "schmatabase/" first-transaction-id ".journal.clj")
         fos (FileOutputStream. filename)
         journal-out (PrintWriter. (OutputStreamWriter. fos "UTF-8"))
         ]
