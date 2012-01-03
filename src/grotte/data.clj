@@ -58,14 +58,15 @@
 (defn make-row
   "Creates a new row.  domain must already have been defined. n.b.: If called within grotte.prevail/prevail be sure to specify :id explicitly so the row will have the same :id value upon rehydration from disk."
   [^Keyword domain & keys-and-vals]
-  (let [rows-for-domain (get @*rows* domain)
-        id (UUID/randomUUID)
-        row (ref (into {:domain domain :id id} (map vec (partition 2 keys-and-vals))))]
+  (let [newid (UUID/randomUUID)]
     (dosync
-     (if (= String (class (:id @row)))
-       (alter row assoc :id (UUID/fromString (:id @row))))
-     (alter rows-for-domain conj row))
-    row))
+     (let [rows-for-domain (get @*rows* domain)
+           row (ref (into {:domain domain :id newid} (map vec (partition 2 keys-and-vals))))
+           id (:id @row)]
+       (if (not (= java.util.UUID (class id)))
+         (alter row assoc :id (java.util.UUID/fromString (.toString id))))
+       (alter rows-for-domain conj row)
+       row))))
 
 (defn find-rows
   ([domain]

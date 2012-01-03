@@ -15,9 +15,9 @@
 (defn init-db
   [journal-file-name first-transaction-id]
   (let [creation-time (System/currentTimeMillis)
-        filename (str "schmatabase/" first-transaction-id ".journal.clj")
-        fos (FileOutputStream. filename)
-        journal-out (PrintWriter. (OutputStreamWriter. fos "UTF-8"))
+        filename (str "schmatabase/" journal-file-name ".journal.clj")
+        fos (FileOutputStream. filename true) ;;true means append
+        journal-out (PrintWriter. (OutputStreamWriter. fos "UTF-8") true) ;;true means flush
         ]
     (dosync (ref-set *journal-out* journal-out))))
 
@@ -52,6 +52,7 @@
           result# (dosync
                    (~f ~@args)
                    (send-off *logger-agent* agent-persist-string the-expr#))]
+      (println (java.util.Date.) ": " the-expr#)
       result#)))
 
 
