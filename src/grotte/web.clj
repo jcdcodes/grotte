@@ -90,18 +90,20 @@
 
   [domain]
   [:div
-   [:table {:border "1" :cellspacing "0"}
-    [:tr (for [k (concat [:id :id] @(get @data/*columns* domain))]
-	   [:th (str k) [:a {:href (str "/" (subs (str domain) 1) "/drop-column/" (subs (str k) 1))} "x"]])]
+   [:table {:border "0" :cellspacing "5px"}
+    [:tr [:td] [:td] (for [k @(get @data/*columns* domain)]
+	   [:th (str k) [:a {:href (str "/" (subs (str domain) 1) "/drop-column/" (subs (str k) 1))} "(x)"]])
+     [:th [:a {:href (str "/" (subs (str domain) 1) "/add-column/")} "(+ col)"]]]
     (for [row @(get @data/*rows* domain)]
       [:tr {:id (:id @row)}
-       [:td [:a {:href "#" :id (str "DEL-" (:id @row))} "delete"]]
+       [:td [:a {:href "#" :id (str "DEL-" (:id @row))} "(x)"]]
        [:td [:a {:href (str "/" (subs (str domain) 1) "/show/" (:id @row))} "show"]]
        (for [k @(get @data/*columns* domain)]
-	 [:td (render-cell domain row k)])]
-      )
-    [:tr [:td {:colspan (+ 2 (count @(get @data/*columns* domain)))}
-          [:a {:href (str "/" (name domain) "/create")} "Create row"]]]]
+	 [:td (render-cell domain row k)])])
+    [:tr
+     [:td {:colspan 2}]
+     [:td {:colspan (count @(get @data/*columns* domain))}
+      [:a {:href (str "/" (name domain) "/create")} "(+ row)"]]]]
 
    ;; Now Javascript wiring...
    (for [row @(get @data/*rows* domain)]
@@ -202,7 +204,9 @@
        (let [uuid (.toString (java.util.UUID/randomUUID))]
          (prevail/prevail grotte.data/make-row (keyword domain) :id uuid))
        (redirect (str "/" domain)))
-
+  (GET "/:domain/add-column/:column-name/:column-type" [domain column-name column-type]
+       (prevail/prevail grotte.data/add-column (keyword domain) (keyword column-name) (keyword column-type))
+       (redirect (str "/" domain)))
   (POST "/:domain/edit/:id" {params :params} []
         (do
           (prn params)
