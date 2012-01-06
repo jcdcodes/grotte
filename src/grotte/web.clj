@@ -1,7 +1,8 @@
 (ns grotte.web
   (:use compojure.core
 	ring.util.response
-	hiccup.core)
+	hiccup.core
+        hiccup.form-helpers)
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
 	    [ring.adapter.jetty :as jetty]
@@ -89,31 +90,35 @@
   be rendered.  Of course, There's no sorting or filtering yet."
 
   [domain]
-  [:div
-   [:table {:border "0" :cellspacing "5px"}
-    [:tr [:td] [:td] (for [k @(get @data/*columns* domain)]
-	   [:th (str k) [:a {:href (str "/" (subs (str domain) 1) "/drop-column/" (subs (str k) 1))} "(x)"]])
-     [:th [:a {:href (str "/" (subs (str domain) 1) "/add-column/")} "(+ col)"]]]
-    (for [row @(get @data/*rows* domain)]
-      [:tr {:id (:id @row)}
-       [:td [:a {:href "#" :id (str "DEL-" (:id @row))} "(x)"]]
-       [:td [:a {:href (str "/" (subs (str domain) 1) "/show/" (:id @row))} "show"]]
+  (let [rows @(get @data/*rows* domain)]
+    [:div
+     [:table {:border "0" :cellspacing "5px"}
+      [:tr [:td] [:td]
        (for [k @(get @data/*columns* domain)]
-	 [:td (render-cell domain row k)])])
-    [:tr
-     [:td {:colspan 2}]
-     [:td {:colspan (count @(get @data/*columns* domain))}
-      [:a {:href (str "/" (name domain) "/create")} "(+ row)"]]]]
-
-   ;; Now Javascript wiring...
-   (for [row @(get @data/*rows* domain)]
-     ;; ...for the delete action.
-     [:script {:type "text/javascript"} (str "ajaxClick(\"#DEL-" (:id @row) "\","
-                                             "{type: \"GET\", "
-                                             " url: \"/" (subs (str domain) 1) "/delete/" (:id @row) "\","
-                                             " dataType: \"html\", success: ajaxRemove(\"#" (:id @row) "\"),"
-                                             " error: ajaxError, confirm: null})")])
-   ])
+         [:th (str k) [:a {:href (str "/" (subs (str domain) 1) "/drop-column/" (subs (str k) 1))} "(x)"]])
+       [:th
+        [:a {:href "#" :onclick "alert('jqueryui magic goes here')"} "(+ col)"]
+        [:div {:id "acpd" :style "display:relative;"} [:ul [:li "name"] [:li "type"]]]]]
+      (for [row rows]
+        [:tr {:id (:id @row)}
+         [:td [:a {:href "#" :id (str "DEL-" (:id @row))} "(x)"]]
+         [:td [:a {:href (str "/" (subs (str domain) 1) "/show/" (:id @row))} "show"]]
+         (for [k @(get @data/*columns* domain)]
+           [:td (render-cell domain row k)])])
+      [:tr
+       [:td {:colspan 2}]
+       [:td {:colspan (count @(get @data/*columns* domain))}
+        [:a {:href (str "/" (name domain) "/create")} "(+ row)"]]]]
+     
+     ;; Now Javascript wiring...
+     (for [row @(get @data/*rows* domain)]
+       ;; ...for the delete action.
+       [:script {:type "text/javascript"} (str "ajaxClick(\"#DEL-" (:id @row) "\","
+                                               "{type: \"GET\", "
+                                               " url: \"/" (subs (str domain) 1) "/delete/" (:id @row) "\","
+                                               " dataType: \"html\", success: ajaxRemove(\"#" (:id @row) "\"),"
+                                               " error: ajaxError, confirm: null})")])
+     ]))
 
 
 (defn domain-page
@@ -133,7 +138,12 @@
 	[:body
 	 [:p [:a {:href "/"} "Home"] " &#8212; " [:b (str domain "s")]]
 	 [:h1 (str domain "s")]
-	 (domain-table domain)]]))
+	 (domain-table domain)
+         [:div {:id :acpd}
+          (form-to [:post (str "/" (subs (str domain) 1) "/add-column")]
+                   (text-field "column-name")
+                   (text-field "column-type")
+                   (submit-button "Add Column"))]]]))
 
 (defn ref? [x]
   (and (not (nil? x)) (= "class clojure.lang.Ref" (str (class x)))))
@@ -206,6 +216,12 @@
        (redirect (str "/" domain)))
   (GET "/:domain/add-column/:column-name/:column-type" [domain column-name column-type]
        (prevail/prevail grotte.data/add-column (keyword domain) (keyword column-name) (keyword column-type))
+       (redirect (str "/" domain)))
+  (POST "/:domain/add-column" {params :params} []
+        (prevail/prevail grotte.data/add-column (keyword (params :domain)) (keyword (params :column-name)) (keyword (params :column-type)))
+        (redirect (str "/" (params :domain))))
+  (GET "/create-domain/:domain" [domain]
+       (prevail/prevail grotte.data/create-domain (keyword :domain))
        (redirect (str "/" domain)))
   (POST "/:domain/edit/:id" {params :params} []
         (do
