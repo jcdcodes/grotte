@@ -9,7 +9,7 @@
 	    [grotte.data :as data]
             [grotte.prevail :as prevail]))
 
-(defn do-page
+(defn root-page
   []
   (html [:head
 	 [:title "The title"]
@@ -40,7 +40,11 @@
          [:h3 "Domains"]
          [:p "If you're coming from SQL land, a domain is a table."]
          (for [[domain visible] (sort @data/*domains*)]
-	   (if visible [:p [:a {:href (str "/" (name domain))} (str domain)]]))]))
+	   (if visible [:p [:a {:href (str "/" (name domain))} (str domain)]]))
+         [:div {:id "new-domain-div"}
+          (form-to [:post (str "/create-domain" )]
+                   (text-field "domain")
+                   (submit-button "Create New Domain"))]]))
 
 (defn now
   []
@@ -199,7 +203,7 @@
 
 (defroutes the-routes
   (GET "/" []
-       (do-page))
+       (root-page))
 
   (GET "/now" []
        (now))
@@ -232,9 +236,9 @@
   (POST "/:domain/add-column" {params :params} []
         (prevail/prevail grotte.data/add-column (keyword (params :domain)) (keyword (params :column-name)) (keyword (params :column-type)))
         (redirect (str "/" (params :domain))))
-  (GET "/create-domain/:domain" [domain]
-       (prevail/prevail grotte.data/create-domain (keyword :domain))
-       (redirect (str "/" domain)))
+  (POST "/create-domain" {params :params} []
+       (prevail/prevail grotte.data/create-domain (keyword (params :domain)))
+       (redirect (str "/" (params :domain))))
   (POST "/:domain/edit/:id" {params :params} []
         (do
           (prn params)
