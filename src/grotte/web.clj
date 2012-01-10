@@ -139,7 +139,7 @@
 	 [:p [:a {:href "/"} "Home"] " &#8212; " [:b (str domain "s")]]
 	 [:h1 (str domain "s")]
 	 (domain-table domain)
-         [:div {:id :acpd}
+         [:div {:id :acpd :style "border:1px solid green;"}
           (form-to [:post (str "/" (subs (str domain) 1) "/add-column")]
                    (text-field "column-name")
                    (text-field "column-type")
@@ -184,6 +184,15 @@
 	     x))
 	 [:hr]]))
 
+(defn history-page
+  []
+  (html [:head [:title "History"]]
+        [:body
+         [:h1 "All change history"]
+         [:ul
+          (for [line (prevail/history)]
+            [:li [:tt line]])]]))
+
 (def jquery-jeditable (slurp "src/js/jquery.jeditable.js"))
 (def jquery-jeditable-datepicker (slurp "src/js/jquery.jeditable.datepicker.js"))
 (def conjure-js (slurp "src/js/conjure.js"))
@@ -200,6 +209,9 @@
        jquery-jeditable)
   (GET "*jquery.jeditable.datepicker.js" []
        jquery-jeditable-datepicker)
+
+  (GET "/history" []
+       (history-page))
 
   (GET "/:domain" [domain]
        (domain-page (keyword domain)))

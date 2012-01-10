@@ -11,6 +11,10 @@
         (try (eval (read-string line))
           (catch Exception e (println "Failed to read: " line " (" e ")")))))))
 
+(defn history
+  []
+  (string/split-lines (slurp  "schmatabase/base.journal.clj")))
+
 (def *journal-out* (ref '()))
 (defn init-db
   [journal-file-name first-transaction-id]
