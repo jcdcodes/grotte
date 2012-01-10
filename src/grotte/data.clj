@@ -28,6 +28,9 @@
 (defn drop-domain
   [^Keyword domain]
   (dosync (alter *domains* assoc domain :hidden)))
+(defn has-domain
+  [^Keyword domain]
+  (= :visible (get @*domains* domain)))
 ;;
 ;;;;;;;;;;;;;;
 

@@ -83,9 +83,11 @@
               [:a {:href (str "/item/show/" (:id @(get @row column)))} (str "Item #" (:id @(get @row column)))])
 
       ;; Default to read-only text.
-      (get @row column)
-
-      )))
+      (if (data/has-domain coltype)
+        (drop-down (subs (str coltype) 1) (into [] (map #(vec [(:body @%) (:id @%)]) (grotte.data/find-rows coltype)))
+                   )
+        (let [v (get @row column)]
+          (if v v "n/a"))))))
 
 
 (defn domain-table
