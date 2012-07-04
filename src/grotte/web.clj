@@ -2,7 +2,7 @@
   (:use compojure.core
 	ring.util.response
 	hiccup.core
-        hiccup.form-helpers)
+        hiccup.form)
   (:require [compojure.route]
             [compojure.handler]
 	    [ring.adapter.jetty :as jetty]
