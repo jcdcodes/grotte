@@ -3,8 +3,8 @@
 	ring.util.response
 	hiccup.core
         hiccup.form-helpers)
-  (:require [compojure.route :as route]
-            [compojure.handler :as handler]
+  (:require [compojure.route]
+            [compojure.handler]
 	    [ring.adapter.jetty :as jetty]
 	    [grotte.data :as data]
             [grotte.prevail :as prevail]))
@@ -251,10 +251,10 @@
             (prevail/prevail grotte.data/update-row-by-idstring (keyword domain) real-id (keyword column-name) value)
             value)))
 
-  (route/not-found "404: Fail whale"))
+  (compojure.route/not-found "404: Fail whale"))
 
 
-(def app (handler/api (var the-routes)))
+(def app (compojure.handler/api (var the-routes)))
 
 (defonce server (ref nil))
 (defn start-server

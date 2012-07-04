@@ -1,5 +1,4 @@
 (ns grotte.core
-  (:import java.util.UUID)
   (:require
    [grotte.prevail :as prevail]
    [grotte.data :as data]

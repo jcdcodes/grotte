@@ -41,3 +41,23 @@
 (grotte.data/add-column :comment :post :post) ;8
 (grotte.data/drop-column :comment :body) ;9
 (grotte.data/add-column :comment :body :editable-text) ;10
+(grotte.data/update-row-by-idstring :post "6766badf-1552-49a7-896a-44c3158065b9" :body "Fishy, fishy, fish!") ;1
+(grotte.data/make-row :comment :id "0bb04293-844c-43f7-8ff8-630ba1d265e4") ;2
+(grotte.data/update-row-by-idstring :comment "0bb04293-844c-43f7-8ff8-630ba1d265e4" :body "Another comment.") ;3
+(grotte.data/update-row-by-idstring :post "6766badf-1552-49a7-896a-44c3158065b9" :age "90000abcdefghij") ;1
+(grotte.data/update-row-by-idstring :post "6766badf-1552-49a7-896a-44c3158065b9" :age "90000abcdefghij") ;2
+(grotte.data/update-row-by-idstring :post "d4c550a5-e162-42bb-8b62-b9a8c47e0966" :pubdate "01/01/2000") ;3
+(grotte.data/update-row-by-idstring :post "d4c550a5-e162-42bb-8b62-b9a8c47e0966" :pubdate "12/31/1999") ;4
+(grotte.data/update-row-by-idstring :post "d4c550a5-e162-42bb-8b62-b9a8c47e0966" :pubdate "12/30/1999") ;5
+(grotte.data/update-row-by-idstring :post "9f99ccee-80da-4d29-819e-609ec637a57f" :color "Red!") ;6
+(grotte.data/update-row-by-idstring :post "9f99ccee-80da-4d29-819e-609ec637a57f" :color "White") ;7
+(grotte.data/update-row-by-idstring :post "9f99ccee-80da-4d29-819e-609ec637a57f" :color "Indigo") ;8
+(grotte.data/create-domain :monkey) ;1
+(grotte.data/make-row :monkey :id "dfdc8bef-acb9-4dcc-a083-0c850008f0fd") ;2
+(grotte.data/add-column :monkey :height ::number) ;3
+(grotte.data/add-column :monkey :width :number) ;4
+(grotte.data/delete-row-by-idstring :monkey "dfdc8bef-acb9-4dcc-a083-0c850008f0fd") ;5
+(grotte.data/add-column :monkey :toppost :post) ;6
+(grotte.data/delete-row-by-idstring :monkey "dfdc8bef-acb9-4dcc-a083-0c850008f0fd") ;1
+(grotte.data/make-row :monkey :id "48f0114b-9907-4253-8a2c-26d4af214f3f") ;2
+(grotte.data/update-row-by-idstring :post "6766badf-1552-49a7-896a-44c3158065b9" :color "orange-red") ;1
