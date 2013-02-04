@@ -15,11 +15,8 @@
 	 [:title "The title"]
          
          ;; JQuery and CSS stuff.
-         [:link {:src "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css"
-                 :rel "stylesheet" :type "text/css"}]
-         [:script {:src "http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"}]
-         [:script {:src "http://ajax.googleapis.com/ajax/libs/jquery-ui/1.8/jquery-ui.min.js"}]
-	 [:script {:type "text/javascript" :src "conjure.js"}]
+         [:script {:src "jquery.min.js"}]
+         [:script {:type "text/javascript" :src "conjure.js"}]
          
          ;; Our own lightweight styling.
          [:style {:type "text/css"}
@@ -131,10 +128,9 @@
   [domain]
   (html [:head
 	 [:title (str domain "s")]
-         [:link {:href "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css"
-                 :rel "stylesheet" :type "text/css"}]
-	 [:script {:type "text/javascript" :src "http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"}]
-	 [:script {:type "text/javascript" :src "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"}]
+   [:link {:href "jqueryui.css" :rel "stylesheet" :type "text/css"}]
+	 [:script {:type "text/javascript" :src "jquery.min.js"}]
+	 [:script {:type "text/javascript" :src "jqueryui.min.js"}]
 	 [:script {:type "text/javascript" :src "jquery.jeditable.js"}]
 	 [:script {:type "text/javascript" :src "jquery.jeditable.datepicker.js"}]
 	 [:script {:type "text/javascript" :src "conjure.js"}]
@@ -158,10 +154,9 @@
   [domain id]
   (html [:head
 	 [:title (str domain "s")]
-         [:link {:href "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css"
-                 :rel "stylesheet" :type "text/css"}]
-	 [:script {:type "text/javascript" :src "http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"}]
-	 [:script {:type "text/javascript" :src "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"}]
+   [:link {:href "jqueryui.css" :rel "stylesheet" :type "text/css"}]
+	 [:script {:type "text/javascript" :src "jquery.min.js"}]
+	 [:script {:type "text/javascript" :src "jqueryui.min.js"}]
 	 [:script {:type "text/javascript" :src "jquery.jeditable.js"}]
 	 [:script {:type "text/javascript" :src "jquery.jeditable.datepicker.js"}]
 	 [:script {:type "text/javascript" :src "conjure.js"}]
@@ -202,6 +197,9 @@
 (def jquery-jeditable (slurp "src/js/jquery.jeditable.js"))
 (def jquery-jeditable-datepicker (slurp "src/js/jquery.jeditable.datepicker.js"))
 (def conjure-js (slurp "src/js/conjure.js"))
+(def jquery-ui-js (slurp "src/js/jquery-ui.min.js"))
+(def jquery-ui-css (slurp "src/js/jquery-ui.css"))
+(def jquery-js (slurp "src/js/jquery.min.js"))
 
 (defroutes the-routes
   (GET "/" []
@@ -215,6 +213,14 @@
        jquery-jeditable)
   (GET "*jquery.jeditable.datepicker.js" []
        jquery-jeditable-datepicker)
+  (GET "*jquery.min.js" []
+       jquery-js)
+  (GET "*jquery.js" []
+       jquery-js)
+  (GET "*jqueryui.min.js" []
+       jquery-ui-js)
+  (GET "*jqueryui.css" []
+       jquery-ui-css)
 
   (GET "/history" []
        (history-page))
