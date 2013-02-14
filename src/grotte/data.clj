@@ -6,12 +6,14 @@
 (def *columns*  (ref {}))
 (def *rows*     (ref {}))
 (def *coltypes* (ref {}))
+(def *domain-namers* (ref {}))
 
 (defn truncate-all []
   (dosync
    (ref-set *domains* {})
    (ref-set *columns* {})
    (ref-set *rows*    {})
+   (ref-set *domain-namers* {})
    ))
 
 ;;;;;;;;;;;;;;
@@ -21,6 +23,7 @@
   [^:keyword domain]
   (dosync
    (alter *domains* assoc domain :visible)
+   (alter *domain-namers* assoc domain #(get % (nth (keys %) 1)))
    (let [old-columns-ref (get @*columns* domain)]
      (if (nil? old-columns-ref)
        (do (alter *columns* assoc domain (ref []))
@@ -115,5 +118,11 @@
   [domain id]
   (set-row-deleted domain id false))
 
+
+(defn row-name
+  [row]
+  (let [domain (:domain row)
+        row-namer (get @*domain-namers* domain)]
+    (str (row-namer row))))
 ;;
 ;;;;;;;;;;;;;;

@@ -9,6 +9,12 @@
 	    [grotte.data :as data]
             [grotte.prevail :as prevail]))
 
+(defn- local-css
+  []
+  (str "h1, h2, h3 { font-family: \"Gill Sans\", Optima, sans-serif; } "
+       "#li { margin-top: 0.2em; margin-bottom: 0.4em; } "
+       "body { font-family: 'Helvetica Neue', 'Gill Sans', Optima, sans-serif; } "))
+
 (defn root-page
   []
   (html [:head
@@ -19,9 +25,7 @@
          [:script {:type "text/javascript" :src "conjure.js"}]
          
          ;; Our own lightweight styling.
-         [:style {:type "text/css"}
-          (str "h1, h2, h3 { font-family: \"Gill Sans\", Optima, sans-serif; }"
-               "#li { margin-top: 0.2em; margin-bottom: 0.4em; }")]]
+         [:style {:type "text/css"} (local-css)]]
         
 	[:body
 	 [:h1 "grotte: rails without restarting"]
@@ -37,7 +41,7 @@
          [:h3 "Domains"]
          [:p "If you're coming from SQL land, a domain is a table."]
          (for [[domain visible] (sort @data/*domains*)]
-	   (if visible [:p [:a {:href (str "/" (name domain))} (str domain)]]))
+	   (if visible [:p [:a {:href (str "/" (name domain))} (str domain)] " (" (count (filter #(not (:deleted @%)) @(get @data/*rows* domain))) ")"]))
          [:div {:id "new-domain-div"}
           (form-to [:post (str "/create-domain" )]
                    (text-field "domain")
@@ -79,6 +83,7 @@
               [:i "nil"]
               [:a {:href (str "/item/show/" (:id @(get @row column)))} (str "Item #" (:id @(get @row column)))])
 
+      
       ;; Default to read-only text.
       (if (data/has-domain coltype)
         (drop-down (subs (str coltype) 1) (into [] (map #(vec [(:body @%) (:id @%)]) (grotte.data/find-rows coltype)))
@@ -93,7 +98,7 @@
   be rendered.  Of course, There's no sorting or filtering yet."
 
   [domain]
-  (let [rows @(get @data/*rows* domain)]
+  (let [rows (filter #(not (:deleted @%)) @(get @data/*rows* domain))]
     [:div
      [:table {:border "0" :cellspacing "5px"}
       [:tr [:td] [:td]
@@ -134,9 +139,7 @@
 	 [:script {:type "text/javascript" :src "jquery.jeditable.js"}]
 	 [:script {:type "text/javascript" :src "jquery.jeditable.datepicker.js"}]
 	 [:script {:type "text/javascript" :src "conjure.js"}]
-	 [:style {:type "text/css"}
-          (str "h1, h2, h3 { font-family: \"Gill Sans\", Optima, sans-serif; }"
-               " #li { margin-top: 0.2em; margin-bottom: 0.4em; }")]
+	 [:style {:type "text/css"} (local-css)]
 	[:body
 	 [:p [:a {:href "/"} "Home"] " &#8212; " [:b (str domain "s")]]
 	 [:h1 (str domain "s")]
@@ -181,7 +184,7 @@
 				    [:li i]
 				    [:ul
 				     [:li (str domain " " id)]
-				     [:li (get row (nth (keys row) 1))]]))))]
+				     [:li (data/row-name row)]]))))]
 	     x))
 	 [:hr]]))
 
