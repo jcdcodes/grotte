@@ -23,7 +23,8 @@
   [^:keyword domain]
   (dosync
    (alter *domains* assoc domain :visible)
-   (alter *domain-namers* assoc domain #(get % (nth (keys %) 1)))
+   (if (not (get *domain-namers* domain))
+     (alter *domain-namers* assoc domain #(str (nth (keys %) 1) ": " (get % (nth (keys %) 1)))))
    (let [old-columns-ref (get @*columns* domain)]
      (if (nil? old-columns-ref)
        (do (alter *columns* assoc domain (ref []))
@@ -117,12 +118,29 @@
 (defn undelete-row
   [domain id]
   (set-row-deleted domain id false))
+;;
+;;;;;;;;;;;;;;
 
-
+;;;;;;;;;;;;;;
+;; Naming functions
+;;
 (defn row-name
+  "Returns the row's name as determined by its domain's namer function."
   [row]
   (let [domain (:domain row)
         row-namer (get @*domain-namers* domain)]
     (str (row-namer row))))
+
+(defn set-domain-namer
+  "Sets the domain's namer function to fn, which takes a row as its argument."
+  [domain fn]
+  (dosync (alter *domain-namers* assoc domain fn)))
+
+(comment
+  "Here is an example:"
+  (set-domain-namer :note #(str (:body %) " (" (subs (str (:id %)) 0 8) ")"))
+
+  )
+
 ;;
 ;;;;;;;;;;;;;;
