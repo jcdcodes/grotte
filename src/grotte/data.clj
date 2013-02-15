@@ -86,7 +86,7 @@
 
 (defn find-row
   [domain ^:keyword column value]
-  (first (filter #(= value (get @% column)) (find-rows domain))))
+  (first (find-rows domain column value)))
 (defn find-row-by-stringid
   [domain ^String id]
   (find-row domain :id (UUID/fromString id)))
