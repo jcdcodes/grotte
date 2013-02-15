@@ -86,7 +86,9 @@
       
       ;; Default to read-only text.
       (if (data/has-domain coltype)
-        (drop-down (subs (str coltype) 1) (into [] (map #(vec [(:body @%) (:id @%)]) (grotte.data/find-rows coltype)))
+        (drop-down (subs (str coltype) 1)
+                   (into [] (map #(vec [(data/row-name @%) (:id @%)]) (grotte.data/find-rows coltype)))
+                   (if (get @row column) [(data/row-name @(get @row column)) (:id @(get @row column))])
                    )
         (let [v (get @row column)]
           (if v v "n/a"))))))
