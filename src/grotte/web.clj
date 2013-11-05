@@ -51,7 +51,7 @@
   []
   (html [:em (System/currentTimeMillis)]))
 
-(defn render-cell-xeditable
+(defn render-cell
   [domain row column]
   (let [coltype (get @(data/*coltypes* domain) column)]
     (case coltype
@@ -61,17 +61,24 @@
       (let [id (str "EDIT-" (:id @row) "_" (subs (str column) 1))]
         [:div
          [:a {:href "#" :id id
-              :data-type "text"
+              :data-type "textarea"
               :data-pk "1"
               :data-original-title "aoeuaoeu"} (get @row column)]
          [:script {:type "text/javascript"}
           (str "$(function(){$('#" id "').editable({url:'/" (name domain) "/edit/" id "', type:'text', pk:1, name:'" id "'});});")]])
 
-
-
+      
       ;; dates
-      ;;:date
-      ;;[]
+      :date
+      (let [id (str "EDIT-" (:id @row) "_" (subs (str column) 1))]
+        [:div
+         [:a {:href "#" :id id
+              :data-type "date"
+              :data-pk "1"
+              :data-original-title "aoeuaoeu"} (get @row column)]
+         [:script {:type "text/javascript"}
+          (str "$(function(){$('#" id "').editable({url:'/" (name domain) "/edit/" id "', type:'datetime', format: 'mm/dd/yyyy', viewformat:'mm/dd/yyyy', pk:1, name:'" id "'});});")]])
+
 
       ;; foreign key to :item
       ;;:item
@@ -86,47 +93,6 @@
         (let [v (get @row column)]
           (if v v "n/a"))))))
 
-(defn render-cell
-  "Assumes row is a map one of whose keys is column.
-  Renders (get @row column) by default, but may do more interesting
-  things depending on the value of (:type column)."
-  [domain row column]
-  (let [coltype (get @(data/*coltypes* domain) column)]
-    (case coltype
-
-      ;; Plain old text values.  Requires javascript glue elsewhere (domain-table).
-      :editable-text
-      [:div
-       [:span    {:id (str "EDIT-" (:id @row) "_" (subs (str column) 1))} (get @row column)]
-       [:script {:type "text/javascript"}
-        (str "$(\"#EDIT-" (:id @row) "_" (subs (str column) 1) "\").editable('/"
-             (subs (str domain) 1) "/edit/EDIT-" (:id @row) "_" (subs (str column) 1) "',"
-             "{tooltip: \"Click to edit...\", style : \"inherit\", loadtype:'POST', id:'" (:id row) "',domain:'" (subs (str domain) 1) "'});")]]
-
-      ;; Dates.  Picked by typing MM/DD/YYYY or with JQuery UI calendar widget.  Stored as MM/DD/YYYY strings.
-      ;; Requires javascript glue elsewhere (domain-table).
-      :date
-      [:div
-       [:span {:class "dt" :id (str "DATE-" (:id @row) "_" (subs (str column) 1))} (get @row column)]
-       [:script {:type "text/javascript"}
-        (str "$(\"#DATE-" (:id @row) "_" (subs (str column) 1) "\").editable('/"
-             (subs (str domain) 1) "/edit/DATE-" (:id @row) "_" (subs (str column) 1) "',"
-             "{tooltip: \"Click to edit...\", style : \"inherit\", type: \"datepicker\"});")]]
-
-      ;; Foreign key relation to the :item domain.  Assumes :item as defined in grotte.core.
-      :item (if (nil? (get @row column))
-              [:i "nil"]
-              [:a {:href (str "/item/show/" (:id @(get @row column)))} (str "Item #" (:id @(get @row column)))])
-
-      
-      ;; Default to read-only text.
-      (if (data/has-domain coltype)
-        (drop-down (subs (str coltype) 1)
-                   (into [] (map #(vec [(data/row-name @%) (:id @%)]) (grotte.data/find-rows coltype)))
-                   (if (get @row column) [(data/row-name @(get @row column)) (:id @(get @row column))])
-                   )
-        (let [v (get @row column)]
-          (if v v "n/a"))))))
 
 (defn domain-table
   "Renders an HTML table with all the rows for this domain.  It
@@ -153,7 +119,7 @@
          [:td [:a {:href "#" :id (str "DEL-" (:id @row))} "(x)"]]
          [:td [:a {:href (str "/" (subs (str domain) 1) "/show/" (:id @row))} "show"]]
          (for [k @(get @data/*columns* domain)]
-           [:td (render-cell-xeditable domain row k)])])
+           [:td (render-cell domain row k)])])
       [:tr
        [:td {:colspan 2}]
        [:td {:colspan (count @(get @data/*columns* domain))}
