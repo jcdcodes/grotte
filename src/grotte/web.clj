@@ -51,6 +51,41 @@
   []
   (html [:em (System/currentTimeMillis)]))
 
+(defn render-cell-xeditable
+  [domain row column]
+  (let [coltype (get @(data/*coltypes* domain) column)]
+    (case coltype
+
+      ;; text
+      :editable-text
+      (let [id (str "EDIT-" (:id @row) "_" (subs (str column) 1))]
+        [:div
+         [:a {:href "#" :id id
+              :data-type "text"
+              :data-pk "1"
+              :data-original-title "aoeuaoeu"} (get @row column)]
+         [:script {:type "text/javascript"}
+          (str "$(function(){$('#" id "').editable({url:'/" (name domain) "/edit/" id "', type:'text', pk:1, name:'" id "'});});")]])
+
+
+
+      ;; dates
+      ;;:date
+      ;;[]
+
+      ;; foreign key to :item
+      ;;:item
+      ;;[]
+
+      ;; default to read-only text
+      (if (data/has-domain coltype)
+        (drop-down (subs (str coltype) 1)
+                   (into [] (map #(vec [(data/row-name @%) (:id @%)]) (grotte.data/find-rows coltype)))
+                   (if (get @row column) [(data/row-name @(get @row column)) (:id @(get @row column))])
+                   )
+        (let [v (get @row column)]
+          (if v v "n/a"))))))
+
 (defn render-cell
   "Assumes row is a map one of whose keys is column.
   Renders (get @row column) by default, but may do more interesting
@@ -93,7 +128,6 @@
         (let [v (get @row column)]
           (if v v "n/a"))))))
 
-
 (defn domain-table
   "Renders an HTML table with all the rows for this domain.  It
   delegates to render-cell to figure out exactly how each cell should
@@ -111,46 +145,41 @@
         [:div {:id "acpd" :style "display:relative;"} [:ul [:li "name"] [:li "type"]]]]]
       (for [row rows]
         [:tr {:id (:id @row)}
+         [:script {:type "text/javascript"} (str "ajaxClick(\"#DEL-" (:id @row) "\","
+                                               "{type: \"GET\", "
+                                               " url: \"/" (subs (str domain) 1) "/delete/" (:id @row) "\","
+                                               " dataType: \"html\", success: ajaxRemove(\"#" (:id @row) "\"),"
+                                               " error: null, confirm: null})")]
          [:td [:a {:href "#" :id (str "DEL-" (:id @row))} "(x)"]]
          [:td [:a {:href (str "/" (subs (str domain) 1) "/show/" (:id @row))} "show"]]
          (for [k @(get @data/*columns* domain)]
-           [:td (render-cell domain row k)])])
+           [:td (render-cell-xeditable domain row k)])])
       [:tr
        [:td {:colspan 2}]
        [:td {:colspan (count @(get @data/*columns* domain))}
         [:a {:href (str "/" (name domain) "/create")} "(+ row)"]]]]
-     
-     ;; Now Javascript wiring...
-     (for [row @(get @data/*rows* domain)]
-       ;; ...for the delete action.
-       [:script {:type "text/javascript"} (str "ajaxClick(\"#DEL-" (:id @row) "\","
-                                               "{type: \"GET\", "
-                                               " url: \"/" (subs (str domain) 1) "/delete/" (:id @row) "\","
-                                               " dataType: \"html\", success: ajaxRemove(\"#" (:id @row) "\"),"
-                                               " error: ajaxError, confirm: null})")])
+     [:div {:id "test"}]
      ]))
 
 
 (defn domain-page
   [domain]
   (html [:head
-	 [:title (str domain "s")]
-   [:link {:href "jqueryui.css" :rel "stylesheet" :type "text/css"}]
-	 [:script {:type "text/javascript" :src "jquery.min.js"}]
-	 [:script {:type "text/javascript" :src "jqueryui.min.js"}]
-	 [:script {:type "text/javascript" :src "jquery.jeditable.js"}]
-	 [:script {:type "text/javascript" :src "jquery.jeditable.datepicker.js"}]
-	 [:script {:type "text/javascript" :src "conjure.js"}]
-	 [:style {:type "text/css"} (local-css)]
-	[:body
-	 [:p [:a {:href "/"} "Home"] " &#8212; " [:b (str domain "s")]]
-	 [:h1 (str domain "s")]
-	 (domain-table domain)
-         [:div {:id :acpd :style "border:1px solid green;"}
-          (form-to [:post (str "/" (subs (str domain) 1) "/add-column")]
-                   (text-field "column-name")
-                   (text-field "column-type")
-                   (submit-button "Add Column"))]]]))
+         [:title (str domain)]
+         [:script {:src "http://code.jquery.com/jquery-1.10.1.min.js"}]
+         [:script {:src "//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"}]
+         [:link {:href "//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" :rel "stylesheet"}]
+         [:script {:src "//cdnjs.cloudflare.com/ajax/libs/x-editable/1.4.6/bootstrap-editable/js/bootstrap-editable.min.js"}]
+
+         ;;; Two js functions from from conjure originally
+         [:script "function ajaxClick(id, ajaxOptions) {$(document).ready(function () {$(id).click(function (e) {e.preventDefault(); if ((ajaxOptions.confirm == null) || (ajaxOptions.confirm())) { $.ajax(ajaxOptions);}});});};function ajaxRemove(id) {return function (data) {$(id).fadeOut(300, function () {$(id).remove();});}};"]
+
+         [:link {:href "//cdnjs.cloudflare.com/ajax/libs/x-editable/1.4.6/bootstrap-editable/css/bootstrap-editable.css" :rel "stylesheet"}]]
+        [:body
+         [:p [:a {:href "/"} "Home"] " &#8212; " [:b (str domain)]]
+         [:h1 (str domain " list")]
+         (domain-table domain)
+         ]))
 
 (defn ref? [x]
   (and (not (nil? x)) (= "class clojure.lang.Ref" (str (class x)))))
@@ -199,11 +228,11 @@
           (for [line (prevail/history)]
             [:li [:tt line]])]]))
 
-(def jquery-jeditable (slurp "src/js/jquery.jeditable.js"))
-(def jquery-jeditable-datepicker (slurp "src/js/jquery.jeditable.datepicker.js"))
-(def conjure-js (slurp "src/js/conjure.js"))
-(def jquery-ui-js (slurp "src/js/jquery-ui.min.js"))
-(def jquery-ui-css (slurp "src/js/jquery-ui.css"))
+;(def jquery-jeditable (slurp "src/js/jquery.jeditable.js"))
+;(def jquery-jeditable-datepicker (slurp "src/js/jquery.jeditable.datepicker.js"))
+;(def conjure-js (slurp "src/js/conjure.js"))
+;(def jquery-ui-js (slurp "src/js/jquery-ui.min.js"))
+;(def jquery-ui-css (slurp "src/js/jquery-ui.css"))
 (def jquery-js (slurp "src/js/jquery.min.js"))
 
 (defroutes the-routes
@@ -212,20 +241,13 @@
 
   (GET "/now" []
        (now))
-  (GET "*conjure.js" []
-       conjure-js)
-  (GET "*jquery.jeditable.js" []
-       jquery-jeditable)
-  (GET "*jquery.jeditable.datepicker.js" []
-       jquery-jeditable-datepicker)
-  (GET "*jquery.min.js" []
-       jquery-js)
-  (GET "*jquery.js" []
-       jquery-js)
-  (GET "*jqueryui.min.js" []
-       jquery-ui-js)
-  (GET "*jqueryui.css" []
-       jquery-ui-css)
+  (GET "*conjure.js" [] conjure-js)
+  (GET "*jquery.jeditable.js" [] jquery-jeditable)
+  (GET "*jquery.jeditable.datepicker.js" [] jquery-jeditable-datepicker)
+  (GET "*jquery.min.js" [] jquery-js)
+  (GET "*jquery.js" [] jquery-js)
+  (GET "*jqueryui.min.js" [] jquery-ui-js)
+  (GET "*jqueryui.css" [] jquery-ui-css)
 
   (GET "/history" []
        (history-page))
