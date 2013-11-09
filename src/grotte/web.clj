@@ -5,6 +5,7 @@
         hiccup.form)
   (:require [compojure.route]
             [compojure.handler]
+            [clojure.data.json :as json]
 	    [ring.adapter.jetty :as jetty]
 	    [grotte.data :as data]
             [grotte.prevail :as prevail]))
@@ -61,8 +62,8 @@
       (let [id (str "EDIT-" (:id @row) "_" (subs (str column) 1))]
         [:div
          [:a {:href "#" :id id
+              :data-pk 1
               :data-type "textarea"
-              :data-pk "1"
               :data-original-title "aoeuaoeu"} (get @row column)]
          [:script {:type "text/javascript"}
           (str "$(function(){$('#" id "').editable({url:'/" (name domain) "/edit/" id "', type:'text', pk:1, name:'" id "'});});")]])
@@ -73,26 +74,37 @@
       (let [id (str "EDIT-" (:id @row) "_" (subs (str column) 1))]
         [:div
          [:a {:href "#" :id id
+              :data-pk 1
               :data-type "date"
-              :data-pk "1"
               :data-original-title "aoeuaoeu"} (get @row column)]
          [:script {:type "text/javascript"}
-          (str "$(function(){$('#" id "').editable({url:'/" (name domain) "/edit/" id "', type:'datetime', format: 'mm/dd/yyyy', viewformat:'mm/dd/yyyy', pk:1, name:'" id "'});});")]])
+          (str "$(function(){$('#" id "').editable({url:'/" (name domain) "/edit/" id "', type:'datetime', format: 'mm/dd/yyyy', viewformat:'mm/dd/yyyy', pk:1});});")]])
 
 
-      ;; foreign key to :item
-      ;;:item
-      ;;[]
+      ;; foreign key to: item
 
       ;; default to read-only text
       (if (data/has-domain coltype)
-        (drop-down (subs (str coltype) 1)
-                   (into [] (map #(vec [(data/row-name @%) (:id @%)]) (grotte.data/find-rows coltype)))
-                   (if (get @row column) [(data/row-name @(get @row column)) (:id @(get @row column))])
-                   )
+        (let [id (str "EDIT-" (:id @row) "_" (name column))]
+          [:div
+           [:a {:href "#" :id id
+                :data-pk 1
+                :data-type "select2"
+                :data-value "text"
+                :data-source (str "/" (name coltype) "/names")
+                :data-title (name domain)
+                :class "editable editable-click"
+                } (get @row column)]
+           [:script {:type "text/javascript"}
+            ;(str "$(function(){$('#" id "').editable({select2:{width:300,placeholder:'Select " (name domain) "',allowClear:true}});});")
+            (str "$(function(){$('#" id "').editable({select2:{width:400,placeholder:'Select " (name domain) "',allowClear:true},url:'/" (name domain) "/edit/" id "'});});" )
+            ]])
         (let [v (get @row column)]
           (if v v "n/a"))))))
 
+(comment (drop-down (subs (str coltype) 1)
+                    (into [] (map #(vec [(data/row-name @%) (:id @%)]) (grotte.data/find-rows coltype)))
+                    (if (get @row column) [(data/row-name @(get @row column)) (:id @(get @row column))])))
 
 (defn domain-table
   "Renders an HTML table with all the rows for this domain.  It
@@ -127,14 +139,26 @@
      [:div {:id "test"}]
      ]))
 
+(defn domain-names-json
+  ([domain key name]
+     (let [rows (filter #(not (:deleted @%)) @(get @data/*rows* domain))]
+       (json/write-str (into [] (map #(assoc {} :id (str (get @% key)) :value (str (get @% name)) :text (str (get @% name))) rows)))))
+  ([domain key]
+     (domain-names-json domain key key))
+  ([domain]
+     (domain-names-json domain :id :id)))
 
 (defn domain-page
   [domain]
   (html [:head
          [:title (str domain)]
          [:script {:src "http://code.jquery.com/jquery-1.10.1.min.js"}]
-         [:script {:src "//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"}]
+         [:link {:href "/select2.css" :rel "stylesheet"}]
+         [:link {:href "/select2-bootstrap.css" :rel "stylesheet"}]
+         [:script {:src "/select2.js"}]
          [:link {:href "//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" :rel "stylesheet"}]
+         [:link {:href "//cdnjs.cloudflare.com/ajax/libs/x-editable/1.4.6/bootstrap-editable/js/bootstrap-editable.css"}]
+         [:script {:src "//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"}]
          [:script {:src "//cdnjs.cloudflare.com/ajax/libs/x-editable/1.4.6/bootstrap-editable/js/bootstrap-editable.min.js"}]
 
          ;;; Two js functions from from conjure originally
@@ -200,6 +224,11 @@
 ;(def jquery-ui-js (slurp "src/js/jquery-ui.min.js"))
 ;(def jquery-ui-css (slurp "src/js/jquery-ui.css"))
 (def jquery-js (slurp "src/js/jquery.min.js"))
+(def select2-js (slurp "src/js/select2-3.4.5/select2.js"))
+(def select2-css (slurp "src/js/select2-3.4.5/select2.css"))
+(def select2-bootstrap-css (slurp "src/js/select2-3.4.5/select2-bootstrap.css"))
+(def select2-png (slurp "src/js/select2-3.4.5/select2.png"))
+(def select2-2-png (slurp "src/js/select2-3.4.5/select2x2.png"))
 
 (defroutes the-routes
   (GET "/" []
@@ -207,19 +236,26 @@
 
   (GET "/now" []
        (now))
-  (GET "*conjure.js" [] conjure-js)
-  (GET "*jquery.jeditable.js" [] jquery-jeditable)
-  (GET "*jquery.jeditable.datepicker.js" [] jquery-jeditable-datepicker)
-  (GET "*jquery.min.js" [] jquery-js)
-  (GET "*jquery.js" [] jquery-js)
-  (GET "*jqueryui.min.js" [] jquery-ui-js)
-  (GET "*jqueryui.css" [] jquery-ui-css)
+  ;(GET "*conjure.js" [] conjure-js)
+  ;(GET "*jquery.jeditable.js" [] jquery-jeditable)
+  ;(GET "*jquery.jeditable.datepicker.js" [] jquery-jeditable-datepicker)
+  ;(GET "*jquery.min.js" [] jquery-js)
+  ;(GET "*jquery.js" [] jquery-js)
+  ;(GET "*jqueryui.min.js" [] jquery-ui-js)
+  ;(GET "*jqueryui.css" [] jquery-ui-css)
+  (GET "*select2.js" [] select2-js)
+  (GET "*select2.css" [] select2-css)
+  (GET "*select2-bootstrap.css" [] select2-bootstrap-css)
+  (GET "*select2.png" [] select2-png)
+  (GET "*select2x2.png" [] select2-2-png)
 
   (GET "/history" []
        (history-page))
 
   (GET "/:domain" [domain]
        (domain-page (keyword domain)))
+  (GET "/:domain/names" [domain]
+       (domain-names-json (keyword domain) :id :name))
   (GET "/:domain/show/:id" [domain id]
        (row-page (keyword domain) id))
   (GET "/:domain/delete/:id" [domain id]

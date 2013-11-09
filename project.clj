@@ -3,6 +3,7 @@
 ;;  :jvm-opts ["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=4321"]
   :dependencies [[org.clojure/clojure "1.4.0"]
                  ;[org.clojure/clojure-contrib "1."]
+                 [org.clojure/data.json "0.2.3"]
                  [ring "1.1.1"]
                  [compojure "1.1.0"]
                  [hiccup "1.0.0"]
