@@ -334,3 +334,22 @@
 (grotte.data/update-row-by-idstring :detail "6f09924b-087b-4643-b628-bb5d09b7bb79" :note "") ;32
 (grotte.data/update-row-by-idstring :detail "4a9c08f3-1f63-49fe-aa20-20ef603e4df0" :state "53f37b31-8116-4a50-8a80-d4fbc81ae828") ;33
 (grotte.data/update-row-by-idstring :detail "a5d1445a-a058-44c6-a117-06174a9d0a2a" :state "53f37b31-8116-4a50-8a80-d4fbc81ae828") ;34
+(grotte.data/update-row-by-idstring :detail "4a9c08f3-1f63-49fe-aa20-20ef603e4df0" :note "ae3b9b2a-0842-429c-8d1f-378ee65d2f5b") ;35
+(grotte.data/update-row-by-idstring :detail "4a9c08f3-1f63-49fe-aa20-20ef603e4df0" :state "53f37b31-8116-4a50-8a80-d4fbc81ae828") ;36
+(grotte.data/update-row-by-idstring :detail "4a9c08f3-1f63-49fe-aa20-20ef603e4df0" :state "492e3396-198e-409a-9b62-f7dca6a13d46") ;37
+(grotte.data/update-row-by-idstring :detail "a5d1445a-a058-44c6-a117-06174a9d0a2a" :state "53f37b31-8116-4a50-8a80-d4fbc81ae828") ;38
+(grotte.data/update-row-by-idstring :detail "4a9c08f3-1f63-49fe-aa20-20ef603e4df0" :state "53f37b31-8116-4a50-8a80-d4fbc81ae828") ;39
+(grotte.data/update-row-by-idstring :detail "6f09924b-087b-4643-b628-bb5d09b7bb79" :state "53f37b31-8116-4a50-8a80-d4fbc81ae828") ;40
+(grotte.data/update-row-by-idstring :note "60e83b1e-ab69-49e1-831e-d483ef816670" :date "11/13/2013") ;41
+(grotte.data/update-row-by-idstring :note "fb00299a-c6bd-40d9-b155-25f2887b3645" :date "") ;42
+(data/set-domain-namer :note :body)
+(data/set-domain-namer :state :name)
+(grotte.data/update-row-by-idstring :detail "4a9c08f3-1f63-49fe-aa20-20ef603e4df0" :note "fb00299a-c6bd-40d9-b155-25f2887b3645") ;1
+(grotte.data/delete-row-by-idstring :detail "a5d1445a-a058-44c6-a117-06174a9d0a2a") ;2
+(grotte.data/delete-row-by-idstring :detail "6f09924b-087b-4643-b628-bb5d09b7bb79") ;3
+(grotte.data/make-row :detail :id "7a4b0944-5462-41d7-8a42-c4f9d04d663b") ;4
+(grotte.data/update-row-by-idstring :detail "7a4b0944-5462-41d7-8a42-c4f9d04d663b" :litany "A new one") ;5
+(grotte.data/update-row-by-idstring :detail "7a4b0944-5462-41d7-8a42-c4f9d04d663b" :note "b3e45c5d-e182-4c24-8d05-c775d8535eee") ;6
+(grotte.data/update-row-by-idstring :detail "4a9c08f3-1f63-49fe-aa20-20ef603e4df0" :note "") ;7
+(grotte.data/update-row-by-idstring :detail "4a9c08f3-1f63-49fe-aa20-20ef603e4df0" :note "10e22af8-7db8-437c-89ee-2ef75db6db42") ;8
+(grotte.data/update-row-by-idstring :detail "7a4b0944-5462-41d7-8a42-c4f9d04d663b" :note "") ;9

@@ -81,10 +81,10 @@
           (str "$(function(){$('#" id "').editable({url:'/" (name domain) "/edit/" id "', type:'datetime', format: 'mm/dd/yyyy', viewformat:'mm/dd/yyyy', pk:1});});")]])
 
 
-      ;; foreign key to: item
 
-      ;; default to read-only text
       (if (data/has-domain coltype)
+        
+        ;; foreign key to: item
         (let [id (str "EDIT-" (:id @row) "_" (name column))]
           [:div
            [:a {:href "#" :id id
@@ -94,11 +94,15 @@
                 :data-source (str "/" (name coltype) "/names")
                 :data-title (name domain)
                 :class "editable editable-click"
-                } (get @row column)]
+                } (let [foreign-id (get @row column)]
+                    (if (and foreign-id (not (= foreign-id "")))
+                      (data/row-name @(data/find-row-by-stringid coltype foreign-id))
+                      foreign-id))]
            [:script {:type "text/javascript"}
-            ;(str "$(function(){$('#" id "').editable({select2:{width:300,placeholder:'Select " (name domain) "',allowClear:true}});});")
             (str "$(function(){$('#" id "').editable({select2:{width:400,placeholder:'Select " (name domain) "',allowClear:true},url:'/" (name domain) "/edit/" id "'});});" )
             ]])
+        
+        ;; default to read-only text
         (let [v (get @row column)]
           (if v v "n/a"))))))
 
@@ -140,13 +144,13 @@
      ]))
 
 (defn domain-names-json
-  ([domain key name]
+  ([domain k nm]
      (let [rows (filter #(not (:deleted @%)) @(get @data/*rows* domain))]
-       (json/write-str (into [] (map #(assoc {} :id (str (get @% key)) :value (str (get @% name)) :text (str (get @% name))) rows)))))
-  ([domain key]
-     (domain-names-json domain key key))
+       (json/write-str (into [] (map #(assoc {} :id (str (k @%)) :value (str (nm @%)) :text (str (nm @%))) rows)))))
+  ([domain nm]
+     (domain-names-json domain :id nm))
   ([domain]
-     (domain-names-json domain :id :id)))
+     (domain-names-json domain :id data/row-name)))
 
 (defn domain-page
   [domain]
@@ -255,7 +259,7 @@
   (GET "/:domain" [domain]
        (domain-page (keyword domain)))
   (GET "/:domain/names" [domain]
-       (domain-names-json (keyword domain) :id :name))
+       (domain-names-json (keyword domain)))
   (GET "/:domain/show/:id" [domain id]
        (row-page (keyword domain) id))
   (GET "/:domain/delete/:id" [domain id]
