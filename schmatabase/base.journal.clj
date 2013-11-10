@@ -353,3 +353,5 @@
 (grotte.data/update-row-by-idstring :detail "4a9c08f3-1f63-49fe-aa20-20ef603e4df0" :note "") ;7
 (grotte.data/update-row-by-idstring :detail "4a9c08f3-1f63-49fe-aa20-20ef603e4df0" :note "10e22af8-7db8-437c-89ee-2ef75db6db42") ;8
 (grotte.data/update-row-by-idstring :detail "7a4b0944-5462-41d7-8a42-c4f9d04d663b" :note "") ;9
+(grotte.data/update-row-by-idstring :detail "7a4b0944-5462-41d7-8a42-c4f9d04d663b" :state "f4326c2c-b360-4c3b-ada3-5467262c0411") ;1
+(data/add-column :detail :state :state)
