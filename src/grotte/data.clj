@@ -57,6 +57,10 @@
   (let [columns-ref (domain @*columns*)]
     (if (not (nil? columns-ref))
       (some #(= % column) @columns-ref))))
+
+(defn columns-for
+  [^:keyword domain]
+  @(get @*columns* domain))
 ;;
 ;;;;;;;;;;;;;;
 

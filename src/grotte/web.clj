@@ -99,7 +99,7 @@
                       (data/row-name @(data/find-row-by-stringid coltype foreign-id))
                       foreign-id))]
            [:script {:type "text/javascript"}
-            (str "$(function(){$('#" id "').editable({select2:{width:400,placeholder:'Select " (name domain) "',allowClear:true},url:'/" (name domain) "/edit/" id "'});});" )
+            (str "$(document).ready(function(){$('#" id "').editable({select2:{width:400,placeholder:'Select " (name domain) "',allowClear:true},url:'/" (name domain) "/edit/" id "'});});" )
             ]])
         
         ;; default to read-only text
@@ -120,7 +120,7 @@
     [:div
      [:table {:border "0" :cellspacing "5px"}
       [:tr [:td] [:td]
-       (for [k @(get @data/*columns* domain)]
+       (for [k (data/columns-for domain)]
          [:th (str k) [:a {:href (str "/" (subs (str domain) 1) "/drop-column/" (subs (str k) 1))} "(x)"]])
        [:th
         [:a {:href "#" :onclick "alert('jqueryui magic goes here')"} "(+ col)"]
@@ -134,11 +134,11 @@
                                                " error: null, confirm: null})")]
          [:td [:a {:href "#" :id (str "DEL-" (:id @row))} "(x)"]]
          [:td [:a {:href (str "/" (subs (str domain) 1) "/show/" (:id @row))} "show"]]
-         (for [k @(get @data/*columns* domain)]
+         (for [k (data/columns-for domain)]
            [:td (render-cell domain row k)])])
       [:tr
        [:td {:colspan 2}]
-       [:td {:colspan (count @(get @data/*columns* domain))}
+       [:td {:colspan (count (data/columns-for domain))}
         [:a {:href (str "/" (name domain) "/create")} "(+ row)"]]]]
      [:div {:id "test"}]
      ]))
@@ -209,7 +209,8 @@
 				    [:li i]
 				    [:ul
 				     [:li (str domain " " id)]
-				     [:li (data/row-name row)]]))))]
+				     [:li (data/row-name row)]
+             [:ul (for [k (filter #(not (= % :parent)) (keys row))] [:li [:b k] "&#8212;" (get row k)])]]))))]
 	     x))
 	 [:hr]]))
 
