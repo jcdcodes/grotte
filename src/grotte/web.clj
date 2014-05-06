@@ -14,36 +14,37 @@
   []
   (str "h1, h2, h3 { font-family: \"Gill Sans\", Optima, sans-serif; } "
        "#li { margin-top: 0.2em; margin-bottom: 0.4em; } "
-       "body { font-family: 'Helvetica Neue', 'Gill Sans', Optima, sans-serif; } "))
+       "body { width: 800px; font-family: 'Helvetica Neue', 'Gill Sans', Optima, sans-serif; } "))
 
 (defn root-page
   []
   (html [:head
 	 [:title "The title"]
-         
+
          ;; JQuery and CSS stuff.
          [:script {:src "jquery.min.js"}]
          [:script {:type "text/javascript" :src "conjure.js"}]
-         
+
          ;; Our own lightweight styling.
          [:style {:type "text/css"} (local-css)]]
-        
+
 	[:body
 	 [:h1 "grotte: rails without restarting"]
 	 [:p "Sketch out a schema with sample data (someday) right in the browser."]
-         
-	 [:p "Upload some data to see how your schema feels. Create "
-          "tables, add and drop columns, define foreign keys, add and "
-          "delete rows, edit values in place, and browse your data.  All "
-          "instantly, right in the browser.  Convert your app (and its "
-          "data) to Rails, Django, or Grails; or just host your app here, someday."]
-         
-         ;; List of defined entity types.
-         [:h3 "Domains"]
-         [:p "If you're coming from SQL land, a domain is a table."]
-         (for [[domain visible] (sort @data/*domains*)]
-	   (if visible [:p [:a {:href (str "/" (name domain))} (str domain)] " (" (count (filter #(not (:deleted @%)) @(get @data/*rows* domain))) ")"]))
-         [:div {:id "new-domain-div"}
+
+	 [:p "Create tables, add and drop columns, define foreign keys, add and "
+          "delete rows, edit values in place, and browse your data.  See how "
+          "your schema feels instantly, right in the browser."]
+
+   ;; List of defined entity types.
+   [:h3 "Domains"]
+   [:p "If you're coming from SQL land, a domain is a table."]
+
+   (for [[domain visible] (sort @data/*domains*)]
+     (if visible [:p [:a {:href (str "/" (name domain))} (str domain)]
+                  " (" (count (filter #(not (:deleted @%)) @(get @data/*rows* domain))) ")"]))
+
+   [:div {:id "new-domain-div"}
           (form-to [:post (str "/create-domain" )]
                    (text-field "domain")
                    (submit-button "Create New Domain"))]]))
@@ -68,7 +69,7 @@
          [:script {:type "text/javascript"}
           (str "$(function(){$('#" id "').editable({url:'/" (name domain) "/edit/" id "', type:'text', pk:1, name:'" id "'});});")]])
 
-      
+
       ;; dates
       :date
       (let [id (str "EDIT-" (:id @row) "_" (subs (str column) 1))]
@@ -81,9 +82,13 @@
           (str "$(function(){$('#" id "').editable({url:'/" (name domain) "/edit/" id "', type:'datetime', format: 'mm/dd/yyyy', viewformat:'mm/dd/yyyy', pk:1});});")]])
 
 
+      :boolean
+      (let [id (str "EDIT-" (:id @row) "_" (subs (str column) 1))]
+        [:input {:type :checkbox
+                 :checked (get @row column)}])
 
       (if (data/has-domain coltype)
-        
+
         ;; foreign key to: item
         (let [id (str "EDIT-" (:id @row) "_" (name column))]
           [:div
@@ -101,7 +106,7 @@
            [:script {:type "text/javascript"}
             (str "$(document).ready(function(){$('#" id "').editable({select2:{width:400,placeholder:'Select " (name domain) "',allowClear:true},url:'/" (name domain) "/edit/" id "'});});" )
             ]])
-        
+
         ;; default to read-only text
         (let [v (get @row column)]
           (if v v "n/a"))))))
@@ -168,7 +173,8 @@
          ;;; Two js functions from from conjure originally
          [:script "function ajaxClick(id, ajaxOptions) {$(document).ready(function () {$(id).click(function (e) {e.preventDefault(); if ((ajaxOptions.confirm == null) || (ajaxOptions.confirm())) { $.ajax(ajaxOptions);}});});};function ajaxRemove(id) {return function (data) {$(id).fadeOut(300, function () {$(id).remove();});}};"]
 
-         [:link {:href "//cdnjs.cloudflare.com/ajax/libs/x-editable/1.4.6/bootstrap-editable/css/bootstrap-editable.css" :rel "stylesheet"}]]
+         [:link {:href "//cdnjs.cloudflare.com/ajax/libs/x-editable/1.4.6/bootstrap-editable/css/bootstrap-editable.css" :rel "stylesheet"}]
+         [:style {:type "text/css"} (local-css)]]
         [:body
          [:p [:a {:href "/"} "Home"] " &#8212; " [:b (str domain)]]
          [:h1 (str domain " list")]

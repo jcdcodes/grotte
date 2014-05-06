@@ -24,7 +24,7 @@
   (dosync
    (alter *domains* assoc domain :visible)
    (if (not (get *domain-namers* domain))
-     (alter *domain-namers* assoc domain #(str (nth (keys %) 1) ": " (get % (nth (keys %) 1)))))
+     (alter *domain-namers* assoc domain #(or (:name %) (:id %))))
    (let [old-columns-ref (get @*columns* domain)]
      (if (nil? old-columns-ref)
        (do (alter *columns* assoc domain (ref []))
@@ -148,3 +148,5 @@
 
 ;;
 ;;;;;;;;;;;;;;
+
+
