@@ -14,7 +14,7 @@
   []
   (str "h1, h2, h3 { font-family: \"Gill Sans\", Optima, sans-serif; } "
        "#li { margin-top: 0.2em; margin-bottom: 0.4em; } "
-       "body { width: 800px; font-family: 'Helvetica Neue', 'Gill Sans', Optima, sans-serif; } "))
+       "body { margin-left: 5em; margin-right: 5em; width: 800px; font-family: 'Helvetica Neue', 'Gill Sans', Optima, sans-serif; } "))
 
 (defn root-page
   []
@@ -65,6 +65,7 @@
          [:a {:href "#" :id id
               :data-pk 1
               :data-type "textarea"
+              :data-placement "right"
               :data-original-title "aoeuaoeu"} (get @row column)]
          [:script {:type "text/javascript"}
           (str "$(function(){$('#" id "').editable({url:'/" (name domain) "/edit/" id "', type:'text', pk:1, name:'" id "'});});")]])
@@ -77,6 +78,7 @@
          [:a {:href "#" :id id
               :data-pk 1
               :data-type "date"
+              :data-placement "right"
               :data-original-title "aoeuaoeu"} (get @row column)]
          [:script {:type "text/javascript"}
           (str "$(function(){$('#" id "').editable({url:'/" (name domain) "/edit/" id "', type:'datetime', format: 'mm/dd/yyyy', viewformat:'mm/dd/yyyy', pk:1});});")]])
@@ -128,7 +130,18 @@
        (for [k (data/columns-for domain)]
          [:th (str k) [:a {:href (str "/" (subs (str domain) 1) "/drop-column/" (subs (str k) 1))} "(x)"]])
        [:th
-        [:a {:href "#" :onclick "alert('jqueryui magic goes here')"} "(+ col)"]
+        [:button {:class "btn btn-default" :data-toggle "modal" :data-target "#addColumnModal"} "Add Column"]
+        [:div {:class "modal fade" :id "addColumnModal" :tabindex "-1" :role "dialog" :aria-labelledby "addColumnModalLabel" :aria-hidden "true"}
+         [:div {:class "modal-dialog"}
+          [:div {:class "modal-content"}
+           [:div {:class "modal-header"}
+            [:button {:type "button" :class "close" :data-dismiss "modal"}
+             [:span {:aria-hidden "true"} "&times;"]]
+            [:h4 {:class "modal-title" :id "addColumnModalLabel"} "Add Column"]]
+           [:div {:class "modal-body"} "foo bar"]
+           [:div {:class "modal-footer"}
+            [:button {:type "button" :class "btn btn-default" :data-dismiss "modal"} "Cancel"]
+            [:button {:type "button" :class "btn btn-primary"} "Add Column"]]]]]
         [:div {:id "acpd" :style "display:relative;"} [:ul [:li "name"] [:li "type"]]]]]
       (for [row rows]
         [:tr {:id (:id @row)}
@@ -229,11 +242,6 @@
           (for [line (prevail/history)]
             [:li [:tt line]])]]))
 
-;(def jquery-jeditable (slurp "src/js/jquery.jeditable.js"))
-;(def jquery-jeditable-datepicker (slurp "src/js/jquery.jeditable.datepicker.js"))
-;(def conjure-js (slurp "src/js/conjure.js"))
-;(def jquery-ui-js (slurp "src/js/jquery-ui.min.js"))
-;(def jquery-ui-css (slurp "src/js/jquery-ui.css"))
 (def jquery-js (slurp "src/js/jquery.min.js"))
 (def select2-js (slurp "src/js/select2-3.4.5/select2.js"))
 (def select2-css (slurp "src/js/select2-3.4.5/select2.css"))

@@ -355,3 +355,64 @@
 (grotte.data/update-row-by-idstring :detail "7a4b0944-5462-41d7-8a42-c4f9d04d663b" :note "") ;9
 (grotte.data/update-row-by-idstring :detail "7a4b0944-5462-41d7-8a42-c4f9d04d663b" :state "f4326c2c-b360-4c3b-ada3-5467262c0411") ;1
 (data/add-column :detail :state :state)
+(grotte.data/update-row-by-idstring :note "10e22af8-7db8-437c-89ee-2ef75db6db42" :date "03/01/2014") ;1
+(grotte.data/update-row-by-idstring :state "45f154c4-5e29-478f-87f3-854b297424d0" :capital "Birmingham") ;2
+(grotte.data/update-row-by-idstring :state "492e3396-198e-409a-9b62-f7dca6a13d46" :capital "Juneau") ;3
+(grotte.data/update-row-by-idstring :state "e2b9ef0f-5a38-4431-81d0-44c27787f0bd" :capital "Phoenix") ;4
+(grotte.data/update-row-by-idstring :state "53f37b31-8116-4a50-8a80-d4fbc81ae828" :capital "Little Rock") ;5
+(grotte.data/update-row-by-idstring :state "f4326c2c-b360-4c3b-ada3-5467262c0411" :capital "Sacramento") ;6
+(grotte.data/update-row-by-idstring :state "284411b3-703f-4283-b136-71118e98d63e" :capital "Denver") ;7
+(grotte.data/update-row-by-idstring :state "0b3f0902-da3e-4e25-b794-1f018b770f5d" :capital "Hartford") ;8
+(grotte.data/update-row-by-idstring :state "834a5a7b-4936-4243-936b-19ec9681832d" :capital "Dover") ;9
+(grotte.data/update-row-by-idstring :state "ab1aaed6-340d-483c-9547-3db4cafb876c" :capital "Tallahassee") ;10
+(grotte.data/update-row-by-idstring :state "9cafbe3b-7d84-49dd-a5a8-613fbdca435e" :capital "Atlanta") ;11
+(grotte.data/update-row-by-idstring :state "9f9943c3-a8a4-45d7-af83-dd0840c7048f" :capital "Honolulu") ;12
+(grotte.data/update-row-by-idstring :state "60f3e6f9-90c5-42b2-b9bc-05feec587202" :capital "Boise") ;13
+(grotte.data/update-row-by-idstring :state "4edf7001-79a1-4d14-af51-0ec1dbaa48e7" :capital "Springfield") ;14
+(grotte.data/update-row-by-idstring :state "055dbf73-0bba-4f2d-8194-3d628d573ccc" :capital "Indianapolis") ;15
+(grotte.data/update-row-by-idstring :state "31cc1692-0142-4927-9fb0-c2af64adf822" :capital "Des Moines") ;16
+(grotte.data/update-row-by-idstring :state "48ab441c-3f53-4ec6-ae48-83535654e8c6" :capital "Topeka") ;17
+(grotte.data/update-row-by-idstring :state "b808d307-4dd9-4e4c-af68-ee734464bc93" :capital "Frankfurt") ;18
+(grotte.data/update-row-by-idstring :state "3e833008-b710-4efc-b455-d659e04e108a" :capital "Baton Rouge") ;19
+(grotte.data/update-row-by-idstring :state "c47cba63-85a8-431d-b590-3063843340dc" :capital "Augusta") ;20
+(grotte.data/update-row-by-idstring :state "71188e74-0971-43de-98a6-1740e0cec08b" :capital "Annapolis") ;21
+(grotte.data/update-row-by-idstring :state "a2f30930-ef53-4678-96bb-e9f987a0c909" :capital "Boston") ;22
+(grotte.data/update-row-by-idstring :state "97bf6328-d56a-4c2b-ad57-596ae458c891" :capital "Lansing") ;23
+(grotte.data/update-row-by-idstring :state "f7f9fc17-c84d-48c9-9e91-a54844ab0925" :capital "Minneapolis") ;24
+(grotte.data/update-row-by-idstring :state "522d3d4c-4410-4966-8f81-ce678d584156" :capital "Jackson") ;25
+(grotte.data/update-row-by-idstring :state "78178e7c-eaeb-4924-8af6-23d3100b8373" :capital "Jefferson City") ;26
+(grotte.data/update-row-by-idstring :state "8a69cf0b-a998-4f32-a26a-b83b0a5c6c39" :capital "Helena") ;27
+(grotte.data/update-row-by-idstring :state "5b783f80-3f50-453e-b272-6bca50051052" :capital "Lincoln") ;28
+(grotte.data/update-row-by-idstring :state "bd4b62aa-ca36-4577-8c47-9cc039fcf582" :capital "Carson City") ;29
+(grotte.data/update-row-by-idstring :state "5052e7d2-685c-4965-83e5-3cf3447f2df3" :capital "Concord") ;30
+(grotte.data/update-row-by-idstring :state "fdd90033-671f-4c37-98b0-1a5a3c3fbb91" :capital "Trenton") ;31
+(grotte.data/update-row-by-idstring :state "9c982610-0ac9-4733-bca7-077eb2ccc82f" :capital "Santa Fe") ;32
+(grotte.data/update-row-by-idstring :state "edcd69d8-55fb-4cba-a86e-333d913c5101" :capital "Albany") ;33
+(grotte.data/update-row-by-idstring :state "3a0ea47f-c9e3-45c2-9e81-a1600e8e57e1" :capital "Wilmington") ;34
+(grotte.data/update-row-by-idstring :state "c8991442-928a-40a8-9ff9-c712e937d3b5" :capital "Bismarck") ;35
+(grotte.data/update-row-by-idstring :state "0accd144-9697-4338-86bb-80f054d447d7" :capital "Columbus") ;36
+(grotte.data/update-row-by-idstring :state "dbdbfb63-3f9a-4f51-9258-331aa0e8caf4" :capital "Oklahoma City") ;37
+(grotte.data/update-row-by-idstring :state "eb1d35e3-9bd7-4537-aba8-2997dafeca4a" :capital "Portland") ;38
+(grotte.data/update-row-by-idstring :state "fc6d4791-f2ca-4ebb-aa22-b9ab9a9a3463" :capital "Harrisburg") ;39
+(grotte.data/update-row-by-idstring :state "79c84c27-b5e0-411e-81ed-066f84b10171" :capital "Providence") ;40
+(grotte.data/update-row-by-idstring :state "7e19a6d8-bf3d-487c-8968-befd077225f5" :capital "Columbia") ;41
+(grotte.data/update-row-by-idstring :state "050ae7bc-f49e-4db6-aecf-3c055fdf3769" :capital "Austin") ;42
+(grotte.data/update-row-by-idstring :state "61e86aab-d13e-4451-b8ca-be5da9a0c6f0" :capital "Salt Lake City") ;43
+(grotte.data/update-row-by-idstring :state "1f747582-9ad8-40dd-8ce1-e47d225bef14" :capital "Montpelier") ;44
+(grotte.data/update-row-by-idstring :state "db0f23c8-cb65-4cf7-a516-da25fc7ab4fb" :capital "Richmond") ;45
+(grotte.data/update-row-by-idstring :state "37156b61-c2fe-40c0-a490-c2cd5b3a4ae9" :capital "Olympia") ;46
+(grotte.data/update-row-by-idstring :state "1e661fd7-ab68-4309-9075-71093072505c" :capital "Charleston") ;47
+(grotte.data/update-row-by-idstring :state "10589778-3dfc-4092-805e-e24eceeac867" :capital "Madison") ;48
+(grotte.data/update-row-by-idstring :state "82e4693a-f2f3-465f-bd58-14f47a51e129" :capital "Cheyenne") ;49
+(grotte.data/update-row-by-idstring :state "fc9d7561-eb4b-4a4a-a138-b852214a963e" :capital "Pierre") ;50
+(grotte.data/update-row-by-idstring :state "4d741ad5-5c1a-4e51-bc0c-e0c054f94279" :capital "Memphis") ;51
+(grotte.data/update-row-by-idstring :state "45f154c4-5e29-478f-87f3-854b297424d0" :capital "Montgomery") ;52
+(grotte.data/update-row-by-idstring :state "b808d307-4dd9-4e4c-af68-ee734464bc93" :capital "Frankfort") ;53
+(grotte.data/update-row-by-idstring :state "f7f9fc17-c84d-48c9-9e91-a54844ab0925" :capital "Saint Paul") ;54
+(grotte.data/update-row-by-idstring :state "3a0ea47f-c9e3-45c2-9e81-a1600e8e57e1" :capital "Raleigh") ;55
+(grotte.data/update-row-by-idstring :state "eb1d35e3-9bd7-4537-aba8-2997dafeca4a" :capital "Salem") ;56
+(grotte.data/update-row-by-idstring :state "4d741ad5-5c1a-4e51-bc0c-e0c054f94279" :capital "Nashville") ;57
+(grotte.data/drop-column :state :capital) ;1
+(grotte.data/update-row-by-idstring :detail "4a9c08f3-1f63-49fe-aa20-20ef603e4df0" :state "492e3396-198e-409a-9b62-f7dca6a13d46") ;2
+(grotte.data/update-row-by-idstring :detail "4a9c08f3-1f63-49fe-aa20-20ef603e4df0" :note "ae3b9b2a-0842-429c-8d1f-378ee65d2f5b") ;3
+(grotte.data/update-row-by-idstring :detail "4a9c08f3-1f63-49fe-aa20-20ef603e4df0" :note "7b4b05e4-40af-4cb5-98e4-8bf01de9fa75") ;4
