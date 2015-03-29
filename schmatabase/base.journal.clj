@@ -416,3 +416,5 @@
 (grotte.data/update-row-by-idstring :detail "4a9c08f3-1f63-49fe-aa20-20ef603e4df0" :state "492e3396-198e-409a-9b62-f7dca6a13d46") ;2
 (grotte.data/update-row-by-idstring :detail "4a9c08f3-1f63-49fe-aa20-20ef603e4df0" :note "ae3b9b2a-0842-429c-8d1f-378ee65d2f5b") ;3
 (grotte.data/update-row-by-idstring :detail "4a9c08f3-1f63-49fe-aa20-20ef603e4df0" :note "7b4b05e4-40af-4cb5-98e4-8bf01de9fa75") ;4
+(grotte.data/update-row-by-idstring :state "492e3396-198e-409a-9b62-f7dca6a13d46" :capital "Juneau, eh?") ;1
+(grotte.data/update-row-by-idstring :state "492e3396-198e-409a-9b62-f7dca6a13d46" :capital "Juneau") ;2
