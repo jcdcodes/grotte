@@ -32,9 +32,11 @@
 	 [:h1 "grotte: rails without restarting"]
 	 [:p "Sketch out a schema with sample data (someday) right in the browser."]
 
+         [:p "Build an app with "[:b "no database migrations"] " and " [:b "no restarts."]]
+
 	 [:p "Create tables, add and drop columns, define foreign keys, add and "
           "delete rows, edit values in place, and browse your data.  See how "
-          "your schema feels instantly, right in the browser."]
+          "your schema feels and modify it without interrupting your work." ]
 
    ;; List of defined entity types.
    [:h3 "Domains"]

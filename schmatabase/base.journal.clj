@@ -418,3 +418,14 @@
 (grotte.data/update-row-by-idstring :detail "4a9c08f3-1f63-49fe-aa20-20ef603e4df0" :note "7b4b05e4-40af-4cb5-98e4-8bf01de9fa75") ;4
 (grotte.data/update-row-by-idstring :state "492e3396-198e-409a-9b62-f7dca6a13d46" :capital "Juneau, eh?") ;1
 (grotte.data/update-row-by-idstring :state "492e3396-198e-409a-9b62-f7dca6a13d46" :capital "Juneau") ;2
+(grotte.data/update-row-by-idstring :detail "7a4b0944-5462-41d7-8a42-c4f9d04d663b" :litany "A new one…") ;1
+(grotte.data/update-row-by-idstring :detail "7a4b0944-5462-41d7-8a42-c4f9d04d663b" :state "45f154c4-5e29-478f-87f3-854b297424d0") ;2
+(grotte.data/make-row :sex :id "50dd9634-fa39-4fa4-a339-f13bc975e316") ;3
+(grotte.data/update-row-by-idstring :note "ae3b9b2a-0842-429c-8d1f-378ee65d2f5b" :date "02/04/2013") ;4
+(grotte.data/update-row-by-idstring :note "ae3b9b2a-0842-429c-8d1f-378ee65d2f5b" :date "") ;5
+(grotte.data/create-domain :month) ;6
+(grotte.data/make-row :detail :id "9664d04e-bc71-4c16-a4e9-f243b5624242") ;7
+(grotte.data/update-row-by-idstring :detail "9664d04e-bc71-4c16-a4e9-f243b5624242" :litany "A litany is a (usually enumerated) list of complaints, but for our purposes it's a vehicle for test verbiage.") ;8
+(grotte.data/update-row-by-idstring :detail "9664d04e-bc71-4c16-a4e9-f243b5624242" :note "b3e45c5d-e182-4c24-8d05-c775d8535eee") ;9
+(grotte.data/update-row-by-idstring :detail "9664d04e-bc71-4c16-a4e9-f243b5624242" :note "10e22af8-7db8-437c-89ee-2ef75db6db42") ;10
+(grotte.data/update-row-by-idstring :detail "9664d04e-bc71-4c16-a4e9-f243b5624242" :state "1f747582-9ad8-40dd-8ce1-e47d225bef14") ;11
