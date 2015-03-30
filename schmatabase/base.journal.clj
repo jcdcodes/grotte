@@ -423,7 +423,6 @@
 (grotte.data/make-row :sex :id "50dd9634-fa39-4fa4-a339-f13bc975e316") ;3
 (grotte.data/update-row-by-idstring :note "ae3b9b2a-0842-429c-8d1f-378ee65d2f5b" :date "02/04/2013") ;4
 (grotte.data/update-row-by-idstring :note "ae3b9b2a-0842-429c-8d1f-378ee65d2f5b" :date "") ;5
-(grotte.data/create-domain :month) ;6
 (grotte.data/make-row :detail :id "9664d04e-bc71-4c16-a4e9-f243b5624242") ;7
 (grotte.data/update-row-by-idstring :detail "9664d04e-bc71-4c16-a4e9-f243b5624242" :litany "A litany is a (usually enumerated) list of complaints, but for our purposes it's a vehicle for test verbiage.") ;8
 (grotte.data/update-row-by-idstring :detail "9664d04e-bc71-4c16-a4e9-f243b5624242" :note "b3e45c5d-e182-4c24-8d05-c775d8535eee") ;9

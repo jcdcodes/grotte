@@ -42,9 +42,9 @@
    [:h3 "Domains"]
    [:p "If you're coming from SQL land, a domain is a table."]
 
-   (for [[domain visible] (sort @data/*domains*)]
-     (if visible [:p [:a {:href (str "/" (name domain))} (str domain)]
-                  " (" (count (filter #(not (:deleted @%)) @(get @data/*rows* domain))) ")"]))
+   (for [[domain visibility] (sort @data/*domains*)]
+     (if (= visibility :visible) [:p [:a {:href (str "/" (name domain))} (str domain)]
+                                  " (" (count (filter #(not (:deleted @%)) @(get @data/*rows* domain))) ")"]))
 
    [:div {:id "new-domain-div"}
           (form-to [:post (str "/create-domain" )]
@@ -176,7 +176,7 @@
   [domain]
   (html [:head
          [:title (str domain)]
-         [:script {:src "http://code.jquery.com/jquery-1.10.1.min.js"}]
+         [:script {:src "//code.jquery.com/jquery-1.10.1.min.js"}]
          [:link {:href "/select2.css" :rel "stylesheet"}]
          [:link {:href "/select2-bootstrap.css" :rel "stylesheet"}]
          [:script {:src "/select2.js"}]
