@@ -32,7 +32,7 @@
 	 [:h1 "grotte: rails without restarting"]
 	 [:p "Sketch out a schema with sample data (someday) right in the browser."]
 
-         [:p "Build an app with "[:b "no database migrations"] " and " [:b "no restarts."]]
+         [:p "Build a CRUD-style web app with "[:b "no separate database migration step"] " and " [:b "no restarts."]]
 
 	 [:p "Create tables, add and drop columns, define foreign keys, add and "
           "delete rows, edit values in place, and browse your data.  See how "

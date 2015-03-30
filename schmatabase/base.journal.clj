@@ -428,3 +428,7 @@
 (grotte.data/update-row-by-idstring :detail "9664d04e-bc71-4c16-a4e9-f243b5624242" :note "b3e45c5d-e182-4c24-8d05-c775d8535eee") ;9
 (grotte.data/update-row-by-idstring :detail "9664d04e-bc71-4c16-a4e9-f243b5624242" :note "10e22af8-7db8-437c-89ee-2ef75db6db42") ;10
 (grotte.data/update-row-by-idstring :detail "9664d04e-bc71-4c16-a4e9-f243b5624242" :state "1f747582-9ad8-40dd-8ce1-e47d225bef14") ;11
+(grotte.data/update-row-by-idstring :sex "50dd9634-fa39-4fa4-a339-f13bc975e316" :description "Other") ;1
+(grotte.data/update-row-by-idstring :sex "50dd9634-fa39-4fa4-a339-f13bc975e316" :code "O") ;2
+(data/add-column :sex :code :editable-text) ;3
+(data/add-column :sex :description :editable-text) ;4
